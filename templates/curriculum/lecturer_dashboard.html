@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="card">
+    <h2 class="page-title">Lecturer Panel</h2>
+    {% if curricula %}
+        <div class="stack">
+            {% for c in curricula %}
+                <div class="card" style="padding:1rem;border-radius:10px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;">
+                        <div>
+                            <strong>{{ c.code }} – {{ c.name }}</strong>
+                            <p class="muted" style="margin:0;">
+                                Program: {{ c.program.code }}
+                                {% if c.year %} · Year: {{ c.get_year_display }}{% endif %}
+                                · Semester: {{ c.get_semester_display }}
+                                · Students: {{ c.students.count }}
+                            </p>
+                        </div>
+                        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                            <a class="button-link" href="{% url 'outcomes:learning_outcome_manage' c.id %}">LO / PO</a>
+                            <a class="button-link" href="{% url 'assessments:assessment_manage' c.id %}">Assessments</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="muted">You are not assigned to any curriculum.</p>
+    {% endif %}
+</section>
+{% endblock %}

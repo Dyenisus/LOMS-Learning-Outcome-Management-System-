@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Faculty Member Panel</h2>
+
+<h3>Your Faculties</h3>
+<ul>
+    {% for f in faculties %}
+        <li><strong>{{ f.code }}</strong> - {{ f.name }}</li>
+    {% empty %}
+        <li>Şu anda sorumlu olduğun faculty yok.</li>
+    {% endfor %}
+</ul>
+
+<hr>
+
+<h3>Your Programs</h3>
+<ul>
+    {% for p in programs %}
+        <li>
+            <strong>{{ p.code }}</strong> - {{ p.name }}
+            ({{ p.faculty.code }})
+            |
+            <a href="{% url 'outcomes:program_outcome_manage' p.id %}">
+                Manage POs
+            </a>
+        </li>
+    {% empty %}
+        <li>Program bulunamadı.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

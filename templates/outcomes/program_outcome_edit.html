@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Edit Program Outcome - {{ po.code }} ({{ program.code }})</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save</button>
+</form>
+
+<p>
+    <a href="{% url 'outcomes:program_outcome_manage' program.id %}">
+        Back to PO List
+    </a>
+</p>
+{% endblock %}

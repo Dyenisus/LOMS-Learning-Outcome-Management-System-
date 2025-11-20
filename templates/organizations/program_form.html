@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="card">
+    <h2 class="page-title">
+        {% if program %}
+            Edit Program: {{ program.code }}
+        {% else %}
+            Add New Program
+        {% endif %}
+    </h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">
+            {% if program %}Update{% else %}Save{% endif %}
+        </button>
+    </form>
+    <p style="margin-top:0.75rem;">
+        <a class="button-link" href="{% url 'organizations:faculty_program_list' %}">
+            ← Back to Faculty & Program List
+        </a>
+    </p>
+</section>
+{% endblock %}

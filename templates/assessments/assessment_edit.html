@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Edit Assessment: {{ assessment.name }}</h2>
+<p>
+    Curriculum: {{ curriculum.code }} - {{ curriculum.name }}
+</p>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save</button>
+</form>
+
+<p>
+    <a href="{% url 'assessments:assessment_manage' curriculum.id %}">Back to Assessment List</a>
+</p>
+{% endblock %}

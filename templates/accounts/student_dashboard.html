@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="card">
+    <h2 class="page-title">Student Dashboard</h2>
+    <div>
+        <p><strong>User:</strong> {{ student.username }}</p>
+        <p>
+            <strong>Program:</strong>
+            {% if program %}
+                {{ program.code }} – {{ program.name }}
+            {% else %}
+                -
+            {% endif %}
+        </p>
+        <p><strong>Grade / Year:</strong> {{ grade|default:"-" }}</p>
+    </div>
+</section>
+
+<section class="card">
+    <h3 class="section-title">My Courses</h3>
+    {% if curricula %}
+        <ul>
+            {% for c in curricula %}
+                <li>
+                    <a class="button-link" href="{% url 'accounts:student_course_detail' c.id %}">
+                        {{ c.code }} – {{ c.name }}
+                    </a>
+                    <small>({{ c.get_semester_display }})</small>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="muted">No courses found for your program & grade.</p>
+    {% endif %}
+</section>
+{% endblock %}

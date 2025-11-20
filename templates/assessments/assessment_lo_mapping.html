@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>LO Mapping for {{ assessment.name }}</h2>
+<p>
+    Curriculum: {{ curriculum.code }} - {{ curriculum.name }}<br>
+    Program: {{ curriculum.program.code }} - {{ curriculum.program.name }}
+</p>
+
+<p>
+    Girilen yüzdeler, bu assessment'in kendi içinde LO'lara nasıl dağıldığını gösterir.
+    (Örn: LO1 40, LO2 60 gibi)
+</p>
+
+<form method="post">
+    {% csrf_token %}
+    <table border="1" cellpadding="4">
+        <tr>
+            <th>LO Code</th>
+            <th>Description</th>
+            <th>Weight in Assessment (%)</th>
+        </tr>
+        {% for row in rows %}
+            <tr>
+                <td>{{ row.lo.code }}</td>
+                <td>{{ row.lo.description }}</td>
+                <td>
+                    <input
+                        type="number"
+                        name="lo_{{ row.lo.id }}"
+                        value="{{ row.weight }}"
+                        min="0"
+                        max="100"
+                    >
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <p>
+        <button type="submit">Save Mapping</button>
+        <a href="{% url 'assessments:assessment_manage' curriculum.id %}">
+            Back to Assessment List
+        </a>
+    </p>
+</form>
+{% endblock %}

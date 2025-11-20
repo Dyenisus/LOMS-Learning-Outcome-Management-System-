@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Program Outcomes for {{ program.code }} - {{ program.name }}</h2>
+
+<h3>Existing POs</h3>
+<ul>
+    {% for po in outcomes %}
+        <li>
+            <strong>{{ po.code }}</strong> - {{ po.short_title }}
+            (Order: {{ po.order }}, Active: {{ po.active }})
+            |
+            <a href="{% url 'outcomes:program_outcome_edit' po.id %}">Edit</a>
+			|
+            <a href="{% url 'outcomes:program_outcome_delete' po.id %}">Delete</a>
+        </li>
+    {% empty %}
+        <li>No Program Outcomes yet.</li>
+    {% endfor %}
+</ul>
+
+<hr>
+
+<h3>Add New Program Outcome</h3>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add PO</button>
+</form>
+
+<p>
+    <a href="{% url 'organizations:faculty_member_dashboard' %}">Back to Faculty Panel</a>
+</p>
+{% endblock %}

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LOMS</title>
+    <style>
+        :root {
+            --bg: #f5f6fa;
+            --card-bg: #ffffff;
+            --text: #1f2a37;
+            --muted: #6b7280;
+            --primary: #2563eb;
+            --primary-dark: #1e3a8a;
+            --border: #e5e7eb;
+            --success: #059669;
+        }
+        * {
+            box-sizing: border-box;
+            font-family: "Inter", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+        }
+        header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        nav {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        nav a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        nav a:hover {
+            color: var(--primary);
+        }
+        .logout-form {
+            display: inline-flex;
+            margin: 0;
+        }
+        .btn,
+        button {
+            border: none;
+            border-radius: 8px;
+            padding: 0.55rem 1.1rem;
+            background: var(--primary);
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .btn.outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+        button:hover,
+        .btn:hover {
+            background: var(--primary-dark);
+        }
+        main {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1.5rem 2.5rem;
+        }
+        .page-title {
+            margin-bottom: 1rem;
+        }
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.05);
+        }
+        .card + .card {
+            margin-top: 1.5rem;
+        }
+        .stack > .card {
+            margin-bottom: 1rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        table th,
+        table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+        }
+        table thead {
+            background: #f1f5f9;
+        }
+        table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        ul {
+            margin: 0;
+            padding-left: 1.25rem;
+            color: var(--muted);
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+        }
+        input,
+        select,
+        textarea {
+            padding: 0.65rem 0.75rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            font-size: 0.95rem;
+        }
+        a.button-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .section-title {
+            margin-bottom: 0.5rem;
+        }
+        .muted {
+            color: var(--muted);
+        }
+        .pill {
+            display: inline-block;
+            padding: 0.15rem 0.65rem;
+            border-radius: 999px;
+            background: #e0e7ff;
+            color: var(--primary-dark);
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+        @media (max-width: 720px) {
+            header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+            nav {
+                width: 100%;
+                justify-content: flex-start;
+                gap: 0.65rem;
+            }
+            table th,
+            table td {
+                padding: 0.65rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>LOMS</h1>
+    <nav>
+        {% if user.is_authenticated %}
+            <span class="pill">{{ user.username }} · {{ user.get_role_display }}</span>
+            {% if user.is_student_affairs %}
+                <a href="{% url 'organizations:faculty_program_list' %}">Org Panel</a>
+                <a href="{% url 'accounts:user_create' %}">User Management</a>
+            {% endif %}
+            {% if user.is_faculty_member %}
+                <a href="{% url 'organizations:faculty_member_dashboard' %}">Faculty Panel</a>
+            {% endif %}
+            {% if user.is_lecturer %}
+                <a href="{% url 'curriculum:lecturer_dashboard' %}">Lecturer Panel</a>
+            {% endif %}
+            {% if user.is_student %}
+                <a href="{% url 'accounts:student_dashboard' %}">My Courses</a>
+            {% endif %}
+            <form method="post" action="{% url 'accounts:logout' %}" class="logout-form">
+                {% csrf_token %}
+                <button type="submit" class="btn outline">Logout</button>
+            </form>
+        {% else %}
+            <a href="{% url 'accounts:login' %}" class="btn">Login</a>
+        {% endif %}
+    </nav>
+</header>
+<main>
+    {% block content %}{% endblock %}
+</main>
+</body>
+</html>

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="card">
+    <h2 class="page-title">Faculty & Program Management</h2>
+    {% if faculties %}
+        <div class="stack">
+            {% for faculty in faculties %}
+                <div class="card" style="padding:1rem;border-radius:10px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;">
+                        <div>
+                            <strong>{{ faculty.code }} – {{ faculty.name }}</strong>
+                            {% if faculty.responsible %}
+                                <span class="muted">Responsible: {{ faculty.responsible.username }}</span>
+                            {% endif %}
+                        </div>
+                        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                            <a class="button-link" href="{% url 'organizations:faculty_edit' faculty.id %}">Edit</a>
+                            <a class="button-link" href="{% url 'organizations:faculty_delete' faculty.id %}">Delete</a>
+                        </div>
+                    </div>
+                    {% if faculty.description %}
+                        <p class="muted" style="margin-top:0.5rem;">{{ faculty.description }}</p>
+                    {% endif %}
+
+                    {% if faculty.programs.all %}
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Program</th>
+                                    <th>Coordinator</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for program in faculty.programs.all %}
+                                    <tr>
+                                        <td>{{ program.code }} – {{ program.name }}</td>
+                                        <td>{{ program.coordinator|default:"-" }}</td>
+                                        <td style="text-align:right;">
+                                            <a class="button-link" href="{% url 'curriculum:curriculum_list' %}?program={{ program.id }}">Curricula</a>
+                                            · <a class="button-link" href="{% url 'organizations:program_edit' program.id %}">Edit</a>
+                                            · <a class="button-link" href="{% url 'organizations:program_delete' program.id %}">Delete</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="muted">No faculties yet.</p>
+    {% endif %}
+</section>
+
+<section class="card">
+    <h3 class="section-title">Add New Faculty</h3>
+    <form method="post">
+        {% csrf_token %}
+        {{ faculty_form.as_p }}
+        <button type="submit">Add Faculty</button>
+    </form>
+</section>
+
+<section class="card">
+    <a class="button-link" href="{% url 'organizations:program_create' %}">+ Add New Program</a>
+</section>
+{% endblock %}

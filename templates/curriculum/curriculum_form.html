@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if curriculum %}
+    <h2>Edit Curriculum: {{ curriculum.code }} - {{ curriculum.name }}</h2>
+{% else %}
+    <h2>Add New Curriculum</h2>
+{% endif %}
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save</button>
+</form>
+
+<p>
+    <a href="{% url 'curriculum:curriculum_list' %}">
+        Back to Curriculum List
+    </a>
+</p>
+{% endblock %}

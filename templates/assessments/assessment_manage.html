@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Assessments for {{ curriculum.code }} - {{ curriculum.name }}</h2>
+<p>
+    Program: {{ curriculum.program.code }} - {{ curriculum.program.name }}<br>
+    Semester: {{ curriculum.get_semester_display }}
+</p>
+
+<h3>Existing Assessments</h3>
+{% if assessments %}
+    <table border="1" cellpadding="4">
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Weight in Course (%)</th>
+            <th>Max Score</th>
+            <th>Date</th>
+            <th>Actions</th>
+        </tr>
+        {% for a in assessments %}
+            <tr>
+                <td>{{ a.name }}</td>
+                <td>{{ a.get_type_display }}</td>
+                <td>{{ a.weight_in_course }}</td>
+                <td>{{ a.max_score }}</td>
+                <td>{{ a.date|default:"-" }}</td>
+                <td>
+                    <a href="{% url 'assessments:assessment_edit' a.id %}">Edit</a> |
+                    <a href="{% url 'assessments:assessment_lo_mapping' a.id %}">LO Mapping</a> |
+                    <a href="{% url 'assessments:assessment_delete' a.id %}">Delete</a> |
+					<a href="{% url 'assessments:assessment_grade_manage' a.id %}">Enter Grades</a> |
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <p><em>No assessments yet.</em></p>
+{% endif %}
+
+<hr>
+
+<h3>Add New Assessment</h3>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add Assessment</button>
+</form>
+
+{% endblock %}

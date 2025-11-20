@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="card">
+    <h2 class="page-title">Create User</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Create</button>
+    </form>
+    <p class="muted" style="margin-top:0.5rem;">
+        Notes:
+        <br>- Students require faculty, program, and grade.
+        <br>- Faculty Members need an assigned faculty.
+        <br>- Lecturer / Faculty member program assignments can also be updated later.
+    </p>
+</section>
+
+<section class="card">
+    <h3 class="section-title">Existing Users</h3>
+    {% if users %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th>Email</th>
+                    <th>Faculty / Program</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.get_role_display }}</td>
+                    <td>{{ user.email|default:"-" }}</td>
+                    <td>
+                        {% if user.student_program %}
+                            {{ user.student_program.code }}
+                        {% elif user.faculty_member_faculty %}
+                            {{ user.faculty_member_faculty.code }}
+                        {% elif user.student_faculty %}
+                            {{ user.student_faculty.code }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if not user.is_superuser %}
+                            <a class="button-link" href="{% url 'accounts:user_edit' user.id %}">Edit</a>
+                            ·
+                            <a class="button-link" href="{% url 'accounts:user_delete' user.id %}">Delete</a>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="muted">No users found.</p>
+    {% endif %}
+</section>
+{% endblock %}

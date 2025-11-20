@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="card">
+    <h2 class="page-title">Edit {{ edited_user.username }}</h2>
+    <p class="muted">{{ edited_user.get_role_display }}</p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+            <button type="submit">Save Changes</button>
+            <a class="btn outline" href="{% url 'accounts:user_create' %}">Cancel</a>
+        </div>
+    </form>
+    <p class="muted" style="margin-top:0.5rem;">
+        Leave password fields blank to keep the current password.
+    </p>
+</section>
+{% endblock %}

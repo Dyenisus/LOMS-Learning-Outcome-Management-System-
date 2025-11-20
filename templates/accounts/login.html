@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="card" style="max-width:480px;margin:auto;">
+    <h2 class="page-title">Login</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Login</button>
+    </form>
+    {% if form.errors %}
+        <p class="muted" style="color:#b91c1c;margin-top:0.5rem;">Invalid username or password.</p>
+    {% endif %}
+</section>
+{% endblock %}

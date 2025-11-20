@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Delete Curriculum</h2>
+
+<p>
+    Are you sure you want to delete
+    <strong>{{ curriculum.code }} - {{ curriculum.name }}</strong>
+    ({{ curriculum.program.code }})?
+</p>
+<p>
+    This will also remove its Learning Outcomes and related mappings.
+</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Yes, delete</button>
+    <a href="{% url 'curriculum:curriculum_list' %}?program={{ curriculum.program.id }}">
+        Cancel
+    </a>
+</form>
+{% endblock %}

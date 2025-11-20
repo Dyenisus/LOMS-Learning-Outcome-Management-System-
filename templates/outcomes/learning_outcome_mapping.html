@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>LO → PO Mapping (with weights)</h2>
+
+<p>
+    Curriculum:
+    <strong>{{ curriculum.code }} - {{ curriculum.name }}</strong><br>
+    LO:
+    <strong>{{ lo.code }} - {{ lo.short_title }}</strong>
+</p>
+
+<form method="post">
+    {% csrf_token %}
+    <table border="1" cellspacing="0" cellpadding="4">
+        <tr>
+            <th>PO Code</th>
+            <th>PO Title</th>
+            <th>Weight (%)</th>
+        </tr>
+        {% for row in rows %}
+            <tr>
+                <td>{{ row.po.code }}</td>
+                <td>{{ row.po.short_title }}</td>
+                <td>
+                    <input
+                        type="number"
+                        name="po_{{ row.po.id }}"
+                        min="0"
+                        max="100"
+                        value="{{ row.weight }}"
+                    >
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <p>
+        <small>
+            Leave empty or 0 to remove the mapping for that PO.
+        </small>
+    </p>
+
+    <button type="submit">Save Mapping</button>
+</form>
+
+<p>
+    <a href="{% url 'outcomes:learning_outcome_manage' curriculum.id %}">
+        Back to LO List
+    </a>
+</p>
+{% endblock %}

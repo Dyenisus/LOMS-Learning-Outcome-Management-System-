@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Edit LO: {{ lo.code }} - {{ lo.short_title }}</h2>
+
+<p>
+    Curriculum: {{ curriculum.code }} - {{ curriculum.name }}
+</p>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save</button>
+</form>
+
+<p>
+    <a href="{% url 'outcomes:learning_outcome_manage' curriculum.id %}">
+        Back to LO List
+    </a>
+</p>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="card">
+    <h2 class="page-title">Delete Program</h2>
+    <p>
+        Are you sure you want to delete
+        <strong>{{ program.code }} – {{ program.name }}</strong>?
+    </p>
+    <form method="post">
+        {% csrf_token %}
+        <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+            <button type="submit">Yes, delete</button>
+            <a class="btn outline" href="{% url 'organizations:faculty_program_list' %}">Cancel</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

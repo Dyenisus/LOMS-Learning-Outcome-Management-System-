@@ -1,6 +1,20 @@
-Django~=5.1
-numpy~=2.1
-pandas~=2.2
-matplotlib~=3.9
-python-dotenv~=1.0
-ipykernel~=6.29
+numpy~=2.1						# for virsualization if needed
+pandas~=2.2						#
+matplotlib~=3.9					#
+ipykernel~=6.29					#
+
+python-dotenv~=1.0				# for .env management
+django-environ>=0.11.0    		#
+
+Django>=5.0,<6.0				# core framework
+
+gunicorn>=21.2.0          		# for production WSGI server
+whitenoise>=6.6.0         		# for static prod
+
+Pillow>=10.0.0            		# for image upload / avatar / syllabus pdf thumbnail ...
+django-crispy-forms>=2.1  		# for form UI düzeni
+crispy-bootstrap5>=2024.2		# for bootstrap 5 crispy forms
+
+djangorestframework>=3.15.0   	# for API
+markdown>=3.6                 	# for django REST Framework docs
+django-filter>=24.2           	# for Query filters

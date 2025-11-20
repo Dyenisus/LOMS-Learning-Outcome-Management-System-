@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Delete Learning Outcome</h2>
+
+<p>
+    Are you sure you want to delete
+    <strong>{{ lo.code }} - {{ lo.short_title }}</strong>
+    for curriculum <strong>{{ curriculum.code }} - {{ curriculum.name }}</strong>?
+</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Yes, delete</button>
+    <a href="{% url 'outcomes:learning_outcome_manage' curriculum.id %}">Cancel</a>
+</form>
+{% endblock %}

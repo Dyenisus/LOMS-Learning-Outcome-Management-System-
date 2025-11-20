@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Learning Outcomes for {{ curriculum.code }} - {{ curriculum.name }}</h2>
+<p>
+    Program: {{ curriculum.program.code }} - {{ curriculum.program.name }}
+</p>
+
+<h3>Existing LOs</h3>
+<ul>
+    {% for lo in los %}
+        <li>
+            <strong>{{ lo.code }}</strong> - {{ lo.short_title }}
+            (Order: {{ lo.order }}, Active: {{ lo.active }})
+
+            {% if lo.program_outcomes.all %}
+                <br>
+                Mapped POs:
+                {% for po in lo.program_outcomes.all %}
+                    {{ po.code }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            {% endif %}
+
+            | <a href="{% url 'outcomes:learning_outcome_edit' lo.id %}">Edit</a>
+			| <a href="{% url 'outcomes:learning_outcome_mapping' lo.id %}">Edit PO Mapping / Weights</a>
+            | <a href="{% url 'outcomes:learning_outcome_delete' lo.id %}">Delete</a>
+        </li>
+    {% empty %}
+        <li>No Learning Outcomes yet.</li>
+    {% endfor %}
+</ul>
+
+<hr>
+
+<h3>Add New Learning Outcome</h3>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add LO</button>
+</form>
+
+<p>
+    <a href="{% url 'curriculum:lecturer_dashboard' %}">Back to Lecturer Panel</a>
+</p>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Delete Program Outcome</h2>
+
+<p>
+    Are you sure you want to delete
+    <strong>{{ po.code }} - {{ po.short_title }}</strong>
+    for program <strong>{{ program.code }} - {{ program.name }}</strong>?
+</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Yes, delete</button>
+    <a href="{% url 'outcomes:program_outcome_manage' program.id %}">Cancel</a>
+</form>
+{% endblock %}

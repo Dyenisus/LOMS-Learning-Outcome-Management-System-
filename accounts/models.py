@@ -55,7 +55,7 @@ class CustomUser(AbstractUser):
         blank=True,
         on_delete=models.SET_NULL,
         related_name="students",
-        help_text="Student için kayıtlı olduğu Faculty",
+        help_text="Faculty where the student is registered",
     )
 
     student_program = models.ForeignKey(
@@ -64,7 +64,7 @@ class CustomUser(AbstractUser):
         blank=True,
         on_delete=models.SET_NULL,
         related_name="students",
-        help_text="Student için kayıtlı olduğu program",
+        help_text="The program the student is enrolled in",
     )
 
     faculty_member_faculty = models.ForeignKey(
@@ -73,21 +73,21 @@ class CustomUser(AbstractUser):
         blank=True,
         on_delete=models.SET_NULL,
         related_name="faculty_members",
-        help_text="Faculty Member için sorumlu olduğu Faculty",
+        help_text="Faculty for which the faculty member is responsible",
     )
 
     lecturer_programs = models.ManyToManyField(
         "organizations.Program",
         blank=True,
         related_name="lecturers",
-        help_text="Lecturer için sorumlu olduğu Program(lar)",
+        help_text="Program(s) for which the Lecturer is responsible",
     )
 
     lecturer_curricula = models.ManyToManyField(
         "curriculum.Curriculum",
         blank=True,
         related_name="lecturers",
-        help_text="Lecturer için sorumlu olduğu Curriculum(lar)",
+        help_text="Curriculum(s) for which the Lecturer is responsible",
     )
 
     phone = models.CharField(

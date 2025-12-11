@@ -20,16 +20,16 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='customuser',
             name='faculty',
-            field=models.ForeignKey(blank=True, help_text='Faculty Member için sorumlu olduğu Faculty', null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='faculty_members', to='organizations.faculty'),
+            field=models.ForeignKey(blank=True, help_text='The faculty member is responsible for the faculty.', null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='faculty_members', to='organizations.faculty'),
         ),
         migrations.AddField(
             model_name='customuser',
             name='lecturer_curricula',
-            field=models.ManyToManyField(blank=True, help_text='Lecturer için sorumlu olduğu Curriculum(lar)', related_name='lecturers', to='curriculum.curriculum'),
+            field=models.ManyToManyField(blank=True, help_text='Curriculum(s) for which the Lecturer is responsible', related_name='lecturers', to='curriculum.curriculum'),
         ),
         migrations.AddField(
             model_name='customuser',
             name='lecturer_programs',
-            field=models.ManyToManyField(blank=True, help_text='Lecturer için sorumlu olduğu Program(lar)', related_name='lecturers', to='organizations.program'),
+            field=models.ManyToManyField(blank=True, help_text='Program(s) for which the Lecturer is responsible', related_name='lecturers', to='organizations.program'),
         ),
     ]

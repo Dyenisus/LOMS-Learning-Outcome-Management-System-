@@ -18,7 +18,6 @@ class Assessment(models.Model):
         on_delete=models.CASCADE,
         related_name="assessments",
     )
-    name = models.CharField(max_length=100)
     type = models.CharField(
         max_length=20,
         choices=AssessmentType.choices,
@@ -49,8 +48,8 @@ class Assessment(models.Model):
 
 class AssessmentLearningOutcome(models.Model):
     """
-    Bir assessment hangi LO'ları yüzde kaç etkiliyor?
-    Örn: Midterm -> LO1 %40, LO2 %60
+    What percentage of each assessment affects each LO (Local Assessment)? 
+    For example: Midterm -> LO1 40%, LO2 60%
     """
     assessment = models.ForeignKey(
         Assessment,
@@ -78,7 +77,7 @@ class AssessmentLearningOutcome(models.Model):
 
 class StudentAssessmentResult(models.Model):
     """
-    Bir öğrencinin belirli bir assessment'tan aldığı not.
+   A student's grade on a particular assessment.
     """
     assessment = models.ForeignKey(
         "assessments.Assessment",
@@ -96,7 +95,7 @@ class StudentAssessmentResult(models.Model):
         decimal_places=2,
         null=True,
         blank=True,
-        help_text="Öğrencinin bu assessment'tan aldığı puan (örn. 85.5).",
+        help_text="The student's score on this assessment (e.g., 85.5).",
     )
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -113,8 +112,8 @@ class StudentAssessmentResult(models.Model):
     @property
     def percentage_of_assessment(self):
         """
-        Assessment.max_score doluysa, öğrencinin yüzdesini döner.
-        Örn: raw_score=80, max_score=100 → 80
+        If Assessment.max_score is full, it returns the student's percentage. 
+        Example: raw_score=80, max_score=100 → 80v
         """
         if self.raw_score is None or not self.assessment or not self.assessment.max_score:
             return None

@@ -30,6 +30,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='customuser',
             name='student_faculty',
-            field=models.ForeignKey(blank=True, help_text='Student için kayıtlı olduğu Faculty', null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='students', to='organizations.faculty'),
+            field=models.ForeignKey(blank=True, help_text='The program the student is enrolled in', null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='students', to='organizations.faculty'),
         ),
     ]

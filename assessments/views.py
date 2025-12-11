@@ -17,8 +17,9 @@ from .models import (
 
 def _check_curriculum_permission_for_lecturer(user: CustomUser, curriculum: Curriculum):
     """
-    Lecturer sadece kendisine atanmış curriculum'lar için assessment yönetebilsin.
-    Admin her şeye girebilir.
+    Lecturers should only be able to manage assessments for the curricula assigned to them. 
+    Administrators can manage everything.
+
     """
     if user.is_admin:
         return
@@ -37,7 +38,8 @@ def _check_curriculum_permission_for_lecturer(user: CustomUser, curriculum: Curr
 @role_required(CustomUser.Role.LECTURER)
 def assessment_manage(request, curriculum_id):
     """
-    Belirli bir curriculum için assessment listesi + yeni assessment ekleme formu.
+    Assessment list for a specific curriculum + form to add new assessments.
+
     """
     curriculum = get_object_or_404(
         Curriculum.objects.select_related("program"),
@@ -123,9 +125,9 @@ def assessment_delete(request, pk):
 @role_required(CustomUser.Role.LECTURER)
 def assessment_lo_mapping(request, pk):
     """
-    Tek bir assessment için:
-    - Curriculum'daki tüm LO'ları listeler
-    - Her LO için yüzde girilerek mapping yapılır.
+    For a single assessment: 
+    - Lists all LOs in the Curriculum. 
+    - Mapping is done by entering a percentage for each LO.
     """
     assessment = get_object_or_404(
         Assessment.objects.select_related("curriculum", "curriculum__program"),
@@ -204,8 +206,8 @@ def assessment_lo_mapping(request, pk):
 @role_required(CustomUser.Role.LECTURER)
 def assessment_grade_manage(request, pk):
     """
-    Tek bir assessment için öğrencilerin notlarını girme / güncelleme ekranı.
-    Burada **raw_score** alanını kullanıyoruz; `score` field'ı yok.
+    This screen is for entering/updating student grades for a single assessment.
+    Here we are using the **raw_score** field; there is no `score` field.
     """
     assessment = get_object_or_404(
         Assessment.objects.select_related("curriculum", "curriculum__program"),

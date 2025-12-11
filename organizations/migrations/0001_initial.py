@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=255)),
                 ('code', models.CharField(max_length=50, unique=True)),
                 ('description', models.TextField(blank=True, help_text='Faculty description / açıklama')),
-                ('responsible', models.ForeignKey(blank=True, help_text="Bu faculty'den sorumlu Faculty Member", null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='responsible_faculties', to=settings.AUTH_USER_MODEL)),
+                ('responsible', models.ForeignKey(blank=True, help_text="Faculty Member responsible for this faculty", null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='responsible_faculties', to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.CreateModel(
@@ -31,7 +31,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=255)),
                 ('code', models.CharField(max_length=50, unique=True)),
                 ('description', models.TextField(blank=True, help_text='Program description / açıklama')),
-                ('coordinator', models.ForeignKey(blank=True, help_text='Programdan sorumlu öğretim elemanı / coordinator', null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='coordinated_programs', to=settings.AUTH_USER_MODEL)),
+                ('coordinator', models.ForeignKey(blank=True, help_text='Faculty Member responsible for this faculty', null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='coordinated_programs', to=settings.AUTH_USER_MODEL)),
                 ('faculty', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='programs', to='organizations.faculty')),
             ],
         ),

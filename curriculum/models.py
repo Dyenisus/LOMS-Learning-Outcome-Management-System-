@@ -28,7 +28,7 @@ class Curriculum(models.Model):
         choices=Year.choices,
         null=True,
         blank=True,
-        help_text="Dersin tipik alındığı sınıf (1,2,3,4).",
+        help_text="Typical class level for the course (1,2,3,4).",
     )
 
     semester = models.CharField(
@@ -50,12 +50,12 @@ class Curriculum(models.Model):
         decimal_places=1,
         null=True,
         blank=True,
-        help_text="Yerel kredi",
+        help_text="Local credit",
     )
 
     description = models.TextField(
         blank=True,
-        help_text="Ders açıklaması",
+        help_text="Course description",
     )
 
     lecturer = models.ForeignKey(
@@ -64,14 +64,14 @@ class Curriculum(models.Model):
         blank=True,
         on_delete=models.SET_NULL,
         related_name="lecturer_curricula_assigned",
-        help_text="Dersin genel sorumlu öğretim üyesi (program bazında).",
+        help_text="The instructor responsible for the overall course (on a program basis).",
     )
 
     students = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         blank=True,
         related_name="enrolled_curricula",
-        help_text="Bu derse kayıtlı öğrenciler (otomatik atanır).",
+        help_text="Students enrolled in this course (automatically assigned).",
     )
 
     class Meta:
@@ -83,10 +83,9 @@ class Curriculum(models.Model):
 
     def save(self, *args, **kwargs):
         """
-        Dersin program + year'i belli olduğunda:
-        - o programda okuyan
-        - o grade'de olan
-        tüm öğrencileri otomatik olarak bu derse ekler.
+        When the course program and year are determined:
+        - all students enrolled in that program 
+        - all students in that grade are automatically added to that course.
         """
         super().save(*args, **kwargs)
 

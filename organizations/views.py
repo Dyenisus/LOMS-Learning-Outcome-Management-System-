@@ -8,9 +8,9 @@ from .forms import FacultyForm, ProgramForm
 @role_required(CustomUser.Role.STUDENT_AFFAIRS)
 def faculty_program_list(request):
     """
-    Student Affairs için:
-    - Tüm Faculty + Program'ları listeler
-    - Yeni Faculty ekleme formu gösterir
+   For Student Affairs: 
+   - Lists all Faculties + Programs
+   - Shows a form to add a new Faculty
     """
     faculties = Faculty.objects.prefetch_related("programs").all()
     faculty_form = FacultyForm()
@@ -31,8 +31,8 @@ def faculty_program_list(request):
 @role_required(CustomUser.Role.STUDENT_AFFAIRS)
 def program_create(request):
     """
-    Student Affairs için:
-    - Yeni Program ekleme sayfası
+    For Student Affairs: 
+    - New Program Addition page
     """
     if request.method == "POST":
         form = ProgramForm(request.POST)

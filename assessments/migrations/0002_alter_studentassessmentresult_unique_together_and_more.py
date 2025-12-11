@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='studentassessmentresult',
             name='raw_score',
-            field=models.DecimalField(blank=True, decimal_places=2, help_text="Öğrencinin bu assessment'tan aldığı puan (örn. 85.5).", max_digits=5, null=True),
+            field=models.DecimalField(blank=True, decimal_places=2, help_text="The student's score on this assessment (e.g., 85.5).", max_digits=5, null=True),
         ),
         migrations.AddField(
             model_name='studentassessmentresult',

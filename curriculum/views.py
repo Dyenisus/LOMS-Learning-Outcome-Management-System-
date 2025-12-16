@@ -83,8 +83,7 @@ def curriculum_delete(request, pk):
 @role_required(CustomUser.Role.LECTURER)
 def lecturer_dashboard(request):
     """
-    The lecturer should review the curricula for which they are responsible.
-
+    Lecturer kendi sorumlu olduğu Curriculum'ları görsün.
     """
     user = request.user
     curricula = (

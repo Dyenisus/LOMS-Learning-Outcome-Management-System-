@@ -5,8 +5,8 @@ from curriculum.models import Curriculum
 
 class ProgramOutcome(models.Model):
     """
-    Program-based PO (Program Outcome). Example: PO1 
-    "Identifying and solving engineering problems...""
+    Program bazlı PO (Program Outcome).
+    Örnek: PO1 - "Mühendislik problemlerini tanımlama ve çözme..."
     """
     program = models.ForeignKey(
         Program,
@@ -16,22 +16,22 @@ class ProgramOutcome(models.Model):
 
     code = models.CharField(
         max_length=20,
-        help_text="PO code (e.g., PO1, PLO2...)",
+        help_text="PO kodu (örn: PO1, PLO2...)",
     )
 
     short_title = models.CharField(
         max_length=255,
-        help_text="Short title (e.g., Problem solving)",
+        help_text="Kısa başlık (örn: Problem çözme)",
     )
 
     description = models.TextField(
         blank=True,
-        help_text="Detailed description",
+        help_text="Detaylı açıklama",
     )
 
     order = models.PositiveSmallIntegerField(
         default=1,
-        help_text="For sorting in lists",
+        help_text="Listelerde sıralama için",
     )
 
     active = models.BooleanField(default=True)
@@ -46,9 +46,9 @@ class ProgramOutcome(models.Model):
 
 class LearningOutcome(models.Model):
     """
-   Course-based LO (Course Learning Outcome).
-   The lecturer will manage this. LO 
-   → can be linked to one or more POs.
+    Ders bazlı LO (Course Learning Outcome).
+    Lecturer burayı yönetecek.
+    LO → bir veya birden fazla PO'ya bağlanabilir.
     """
     curriculum = models.ForeignKey(
         Curriculum,
@@ -58,22 +58,22 @@ class LearningOutcome(models.Model):
 
     code = models.CharField(
         max_length=20,
-        help_text="LO code (e.g., LO1)",
+        help_text="LO kodu (örn: LO1)",
     )
 
     short_title = models.CharField(
         max_length=255,
-        help_text="Short title (e.g., Explanation of key concepts)",
+        help_text="Kısa başlık (örn: Temel kavramları açıklama)",
     )
 
     description = models.TextField(
         blank=True,
-        help_text="Detailed description",
+        help_text="Detaylı açıklama",
     )
 
     order = models.PositiveSmallIntegerField(
         default=1,
-        help_text="In-course LO ranking",
+        help_text="Ders içi LO sıralaması",
     )
 
     active = models.BooleanField(default=True)

@@ -8,7 +8,7 @@ class Faculty(models.Model):
 
     description = models.TextField(
         blank=True,
-        help_text="Faculty description",
+        help_text="Faculty description / açıklama",
     )
 
     responsible = models.ForeignKey(
@@ -17,7 +17,7 @@ class Faculty(models.Model):
         blank=True,
         on_delete=models.SET_NULL,
         related_name="responsible_faculties",
-        help_text="Faculty Member responsible for this faculty",
+        help_text="Bu faculty'den sorumlu Faculty Member",
     )
 
     def __str__(self):
@@ -36,7 +36,7 @@ class Program(models.Model):
 
     description = models.TextField(
         blank=True,
-        help_text="Program description",
+        help_text="Program description / açıklama",
     )
 
     coordinator = models.ForeignKey(
@@ -45,7 +45,7 @@ class Program(models.Model):
         blank=True,
         on_delete=models.SET_NULL,
         related_name="coordinated_programs",
-        help_text="Faculty member/coordinator responsible for the program",
+        help_text="Programdan sorumlu öğretim elemanı / coordinator",
     )
 
     def __str__(self):

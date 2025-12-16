@@ -143,10 +143,11 @@ def student_dashboard(request):
 @role_required(CustomUser.Role.STUDENT)
 def student_course_detail(request, curriculum_id):
     """
-    A single lesson for the student:
-    - basic information
-    -Assessment list + your own grade
-    - assessment → LO → PO mapping is shown.
+    Öğrenci için tek bir dersin:
+    - temel bilgileri
+    - assessment listesi + kendi notu
+    - assessment → LO → PO mapping
+    gösterilir.
     """
     user: CustomUser = request.user
 

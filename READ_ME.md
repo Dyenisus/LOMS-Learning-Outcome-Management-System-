@@ -5,22 +5,16 @@ To use it with Virtual env run:
   Windows
 
     python -m venv .venv
-
     .venv\Scripts\activate
-
     pip install --upgrade pip
-
     pip install -r requirements.txt
 
 
   Macos
 
     python -m venv .venv
-
     source .venv/bin/activate
-
     pip install --upgrade pip
-
     pip install -r requirements.txt
 
 

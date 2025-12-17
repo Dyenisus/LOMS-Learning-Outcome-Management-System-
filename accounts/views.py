@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from accounts.decorators import role_required
 from .models import CustomUser
-from curriculum.models import Curriculum
+from courses.models import Course
 from .forms import UserCreateForm
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
@@ -105,7 +105,7 @@ def role_redirect(request):
 
     # 4) Lecturer → Lecturer Dashboard
     if user.is_lecturer:
-        return redirect("curriculum:lecturer_dashboard")
+        return redirect("courses:lecturer_dashboard")
 
     # 5) Student → şimdilik Org Panel veya ileride Student Dashboard
     if user.is_student:
@@ -122,10 +122,10 @@ def student_dashboard(request):
     student_program = user.student_program      
     student_grade = user.student_grade          
 
-    curricula = Curriculum.objects.none()
+    courses = Course.objects.none()
     if student_program and student_grade:
-        curricula = (
-            Curriculum.objects
+        courses = (
+            Course.objects
             .filter(
                 program=student_program,        
                 year=student_grade,             
@@ -137,12 +137,12 @@ def student_dashboard(request):
         "student": user,
         "program": student_program,
         "grade": student_grade,
-        "curricula": curricula,
+        "courses": courses,
     }
     return render(request, "accounts/student_dashboard.html", context)
 
 @role_required(CustomUser.Role.STUDENT)
-def student_course_detail(request, curriculum_id):
+def student_course_detail(request, course_id):
     """
     Öğrenci için tek bir dersin:
     - temel bilgileri
@@ -156,16 +156,16 @@ def student_course_detail(request, curriculum_id):
     student_grade = getattr(user, "student_grade", None)
 
     # Öğrencinin program + grade'ine ait olmayan derse girmesin
-    curriculum = get_object_or_404(
-        Curriculum.objects.select_related("program", "lecturer"),
-        id=curriculum_id,
+    course = get_object_or_404(
+        Course.objects.select_related("program", "lecturer"),
+        id=course_id,
         program=student_program,
         year=student_grade,
     )
 
     # İlgili dersin tüm assessment'ları
     assessments = (
-        Assessment.objects.filter(curriculum=curriculum)
+        Assessment.objects.filter(course=course)
         .prefetch_related(
             "lo_mappings__learning_outcome__lo_po_mappings__program_outcome",
             "results",
@@ -177,7 +177,7 @@ def student_course_detail(request, curriculum_id):
     results_by_assessment = {
         r.assessment_id: r
         for r in StudentAssessmentResult.objects.filter(
-            assessment__curriculum=curriculum,
+            assessment__course=course,
             student=user,
         )
     }
@@ -238,7 +238,7 @@ def student_course_detail(request, curriculum_id):
 
     context = {
         "student": user,
-        "curriculum": curriculum,
+        "course": course,
         "rows": rows,
     }
     return render(request, "accounts/student_course_detail.html", context)

@@ -3,9 +3,9 @@
 {% block content %}
 <section class="card">
     <h2 class="page-title">Lecturer Panel</h2>
-    {% if curricula %}
+    {% if courses %}
         <div class="stack">
-            {% for c in curricula %}
+            {% for c in courses %}
                 <div class="card" style="padding:1rem;border-radius:10px;">
                     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;">
                         <div>
@@ -26,7 +26,7 @@
             {% endfor %}
         </div>
     {% else %}
-        <p class="muted">You are not assigned to any curriculum.</p>
+        <p class="muted">You are not assigned to any course.</p>
     {% endif %}
 </section>
 {% endblock %}

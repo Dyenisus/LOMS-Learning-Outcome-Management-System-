@@ -3,7 +3,7 @@ from django.conf import settings
 from organizations.models import Program
 
 
-class Curriculum(models.Model):
+class Course(models.Model):
     class Year(models.IntegerChoices):
         YEAR_1 = 1, "1st Year"
         YEAR_2 = 2, "2nd Year"
@@ -18,7 +18,7 @@ class Curriculum(models.Model):
     program = models.ForeignKey(
         Program,
         on_delete=models.CASCADE,
-        related_name="curricula",
+        related_name="courses",
     )
 
     code = models.CharField(max_length=50)
@@ -63,14 +63,14 @@ class Curriculum(models.Model):
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
-        related_name="lecturer_curricula_assigned",
+        related_name="lecturer_courses_assigned",
         help_text="Dersin genel sorumlu öğretim üyesi (program bazında).",
     )
 
     students = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         blank=True,
-        related_name="enrolled_curricula",
+        related_name="enrolled_courses",
         help_text="Bu derse kayıtlı öğrenciler (otomatik atanır).",
     )
 
@@ -92,7 +92,7 @@ class Curriculum(models.Model):
 
         # year ve program tanımlıysa → auto-enroll
         if self.year and self.program_id:
-            from accounts.models import CustomUser  # local import, circular'ı önler
+            from accounts.models import CustomUser  # local import to avoid circulars
 
             qs = CustomUser.objects.filter(
                 role=CustomUser.Role.STUDENT,

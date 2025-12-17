@@ -2,16 +2,16 @@
 
 {% block content %}
 <section class="card">
-    <h2 class="page-title">{{ curriculum.code }} – {{ curriculum.name }}</h2>
-    <p><strong>Program:</strong> {{ curriculum.program.code }} – {{ curriculum.program.name }}</p>
+    <h2 class="page-title">{{ course.code }} – {{ course.name }}</h2>
+    <p><strong>Program:</strong> {{ course.program.code }} – {{ course.program.name }}</p>
     <p>
-        <strong>Year:</strong> {{ curriculum.get_year_display }}
-        · <strong>Semester:</strong> {{ curriculum.get_semester_display }}
+        <strong>Year:</strong> {{ course.get_year_display }}
+        · <strong>Semester:</strong> {{ course.get_semester_display }}
     </p>
     <p>
         <strong>Lecturer:</strong>
-        {% if curriculum.lecturer %}
-            {{ curriculum.lecturer.get_full_name|default:curriculum.lecturer.username }}
+        {% if course.lecturer %}
+            {{ course.lecturer.get_full_name|default:course.lecturer.username }}
         {% else %}
             -
         {% endif %}

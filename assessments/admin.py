@@ -4,8 +4,8 @@ from .models import Assessment, AssessmentLearningOutcome, StudentAssessmentResu
 
 @admin.register(Assessment)
 class AssessmentAdmin(admin.ModelAdmin):
-    list_display = ("name", "curriculum", "type", "weight_in_course", "max_score")
-    list_filter = ("type", "curriculum__program")
+    list_display = ("name", "course", "type", "weight_in_course", "max_score")
+    list_filter = ("type", "course__program")
 
 
 @admin.register(AssessmentLearningOutcome)
@@ -16,5 +16,5 @@ class AssessmentLearningOutcomeAdmin(admin.ModelAdmin):
 @admin.register(StudentAssessmentResult)
 class StudentAssessmentResultAdmin(admin.ModelAdmin):
     list_display = ("assessment", "student", "raw_score", "created_at")
-    list_filter = ("assessment__curriculum",)
+    list_filter = ("assessment__course",)
     search_fields = ("student__username", "student__first_name", "student__last_name")

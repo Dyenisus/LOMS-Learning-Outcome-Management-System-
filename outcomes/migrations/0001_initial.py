@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('curriculum', '0001_initial'),
+        ('courses', '0001_initial'),
         ('organizations', '0001_initial'),
     ]
 
@@ -23,10 +23,10 @@ class Migration(migrations.Migration):
                 ('description', models.TextField(blank=True, help_text='Detaylı açıklama')),
                 ('order', models.PositiveSmallIntegerField(default=1, help_text='Ders içi LO sıralaması')),
                 ('active', models.BooleanField(default=True)),
-                ('curriculum', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='learning_outcomes', to='curriculum.curriculum')),
+                ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='learning_outcomes', to='courses.course')),
             ],
             options={
-                'ordering': ['curriculum', 'order', 'code'],
+                'ordering': ['course', 'order', 'code'],
             },
         ),
         migrations.CreateModel(
@@ -64,6 +64,6 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterUniqueTogether(
             name='learningoutcome',
-            unique_together={('curriculum', 'code')},
+            unique_together={('course', 'code')},
         ),
     ]

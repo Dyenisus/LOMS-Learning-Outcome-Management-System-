@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Assessments for {{ curriculum.code }} - {{ curriculum.name }}</h2>
+<h2>Assessments for {{ course.code }} - {{ course.name }}</h2>
 <p>
-    Program: {{ curriculum.program.code }} - {{ curriculum.program.name }}<br>
-    Semester: {{ curriculum.get_semester_display }}
+    Program: {{ course.program.code }} - {{ course.program.name }}<br>
+    Semester: {{ course.get_semester_display }}
 </p>
 
 <h3>Existing Assessments</h3>

@@ -19,9 +19,9 @@
 
 <section class="card">
     <h3 class="section-title">My Courses</h3>
-    {% if curricula %}
+    {% if courses %}
         <ul>
-            {% for c in curricula %}
+            {% for c in courses %}
                 <li>
                     <a class="button-link" href="{% url 'accounts:student_course_detail' c.id %}">
                         {{ c.code }} – {{ c.name }}

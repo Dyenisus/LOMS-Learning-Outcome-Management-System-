@@ -210,7 +210,7 @@
                 <a href="{% url 'organizations:faculty_member_dashboard' %}">Faculty Panel</a>
             {% endif %}
             {% if user.is_lecturer %}
-                <a href="{% url 'curriculum:lecturer_dashboard' %}">Lecturer Panel</a>
+                <a href="{% url 'courses:lecturer_dashboard' %}">Lecturer Panel</a>
             {% endif %}
             {% if user.is_student %}
                 <a href="{% url 'accounts:student_dashboard' %}">My Courses</a>

@@ -1,11 +1,11 @@
 from django import forms
-from .models import Curriculum
+from .models import Course
 from accounts.models import CustomUser
 
 
-class CurriculumForm(forms.ModelForm):
+class CourseForm(forms.ModelForm):
     class Meta:
-        model = Curriculum
+        model = Course
         fields = [
             "program",
             "code",

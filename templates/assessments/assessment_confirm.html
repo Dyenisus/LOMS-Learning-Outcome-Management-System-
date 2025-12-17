@@ -5,13 +5,13 @@
 <p>
     Are you sure you want to delete
     <strong>{{ assessment.name }}</strong>
-    for curriculum
-    <strong>{{ curriculum.code }} - {{ curriculum.name }}</strong>?
+    for course
+    <strong>{{ course.code }} - {{ course.name }}</strong>?
 </p>
 
 <form method="post">
     {% csrf_token %}
     <button type="submit">Yes, delete</button>
-    <a href="{% url 'assessments:assessment_manage' curriculum.id %}">Cancel</a>
+    <a href="{% url 'assessments:assessment_manage' course.id %}">Cancel</a>
 </form>
 {% endblock %}

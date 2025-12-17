@@ -6,7 +6,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("accounts/", include("accounts.urls")),
     path("org/", include("organizations.urls", namespace="organizations")),
-	path("curriculum/", include("curriculum.urls", namespace="curriculum")),
+	path("courses/", include("courses.urls", namespace="courses")),
 	path("outcomes/", include("outcomes.urls", namespace="outcomes")),
 	path("assessments/", include("assessments.urls")),
 

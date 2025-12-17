@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('curriculum', '0001_initial'),
+        ('courses', '0001_initial'),
         ('outcomes', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
@@ -25,13 +25,13 @@ class Migration(migrations.Migration):
                 ('weight_in_course', models.PositiveSmallIntegerField(help_text='Contribution to course grade in percent (0-100).')),
                 ('max_score', models.PositiveIntegerField(default=100, help_text='Maximum raw score (e.g. 100).')),
                 ('date', models.DateField(blank=True, null=True)),
-                ('curriculum', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='assessments', to='curriculum.curriculum')),
+                ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='assessments', to='courses.course')),
             ],
             options={
                 'verbose_name': 'Assessment',
                 'verbose_name_plural': 'Assessments',
-                'ordering': ['curriculum', 'type', 'name'],
-                'unique_together': {('curriculum', 'name')},
+                'ordering': ['course', 'type', 'name'],
+                'unique_together': {('course', 'name')},
             },
         ),
         migrations.CreateModel(

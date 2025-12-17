@@ -16,7 +16,7 @@ urlpatterns = [
     path("po/<int:pk>/edit/", program_outcome_edit, name="program_outcome_edit"),
     path("po/<int:pk>/delete/", program_outcome_delete, name="program_outcome_delete"),
 
-    path("curriculum/<int:curriculum_id>/lo/", learning_outcome_manage, name="learning_outcome_manage"),
+    path("course/<int:course_id>/lo/", learning_outcome_manage, name="learning_outcome_manage"),
     path("lo/<int:pk>/edit/", learning_outcome_edit, name="learning_outcome_edit"),
     path("lo/<int:pk>/delete/", learning_outcome_delete, name="learning_outcome_delete"),
 	path("lo/<int:pk>/mapping/", learning_outcome_mapping, name="learning_outcome_mapping"),

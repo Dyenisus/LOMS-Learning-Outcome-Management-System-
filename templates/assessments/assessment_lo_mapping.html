@@ -3,8 +3,8 @@
 {% block content %}
 <h2>LO Mapping for {{ assessment.name }}</h2>
 <p>
-    Curriculum: {{ curriculum.code }} - {{ curriculum.name }}<br>
-    Program: {{ curriculum.program.code }} - {{ curriculum.program.name }}
+    Course: {{ course.code }} - {{ course.name }}<br>
+    Program: {{ course.program.code }} - {{ course.program.name }}
 </p>
 
 <p>
@@ -39,7 +39,7 @@
 
     <p>
         <button type="submit">Save Mapping</button>
-        <a href="{% url 'assessments:assessment_manage' curriculum.id %}">
+        <a href="{% url 'assessments:assessment_manage' course.id %}">
             Back to Assessment List
         </a>
     </p>

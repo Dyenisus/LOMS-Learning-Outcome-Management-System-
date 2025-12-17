@@ -6,7 +6,7 @@ from django.forms import modelform_factory
 
 from accounts.decorators import role_required
 from accounts.models import CustomUser
-from curriculum.models import Curriculum
+from courses.models import Course
 from outcomes.models import LearningOutcome
 from .models import (
     Assessment,
@@ -15,37 +15,37 @@ from .models import (
 )
 
 
-def _check_curriculum_permission_for_lecturer(user: CustomUser, curriculum: Curriculum):
+def _check_course_permission_for_lecturer(user: CustomUser, course: Course):
     """
-    Lecturer sadece kendisine atanmış curriculum'lar için assessment yönetebilsin.
+    Lecturer sadece kendisine atanmış course'lar için assessment yönetebilsin.
     Admin her şeye girebilir.
     """
     if user.is_admin:
         return
 
     # Ana lecturer FK kontrolü
-    if getattr(curriculum, "lecturer_id", None) == user.id:
+    if getattr(course, "lecturer_id", None) == user.id:
         return
 
     # Eğer M2M 'lecturers' alanı varsa, onu da kontrol et
-    if hasattr(curriculum, "lecturers") and curriculum.lecturers.filter(id=user.id).exists():
+    if hasattr(course, "lecturers") and course.lecturers.filter(id=user.id).exists():
         return
 
-    raise PermissionDenied("You are not allowed to manage assessments for this curriculum.")
+    raise PermissionDenied("You are not allowed to manage assessments for this course.")
 
 
 @role_required(CustomUser.Role.LECTURER)
-def assessment_manage(request, curriculum_id):
+def assessment_manage(request, course_id):
     """
-    Belirli bir curriculum için assessment listesi + yeni assessment ekleme formu.
+    Belirli bir course için assessment listesi + yeni assessment ekleme formu.
     """
-    curriculum = get_object_or_404(
-        Curriculum.objects.select_related("program"),
-        id=curriculum_id,
+    course = get_object_or_404(
+        Course.objects.select_related("program"),
+        id=course_id,
     )
-    _check_curriculum_permission_for_lecturer(request.user, curriculum)
+    _check_course_permission_for_lecturer(request.user, course)
 
-    assessments = curriculum.assessments.all().order_by("date", "name")
+    assessments = course.assessments.all().order_by("date", "name")
 
     AssessmentForm = modelform_factory(
         Assessment,
@@ -56,14 +56,14 @@ def assessment_manage(request, curriculum_id):
         form = AssessmentForm(request.POST)
         if form.is_valid():
             assessment = form.save(commit=False)
-            assessment.curriculum = curriculum
+            assessment.course = course
             assessment.save()
-            return redirect("assessments:assessment_manage", curriculum_id=curriculum.id)
+            return redirect("assessments:assessment_manage", course_id=course.id)
     else:
         form = AssessmentForm()
 
     context = {
-        "curriculum": curriculum,
+        "course": course,
         "assessments": assessments,
         "form": form,
     }
@@ -73,11 +73,11 @@ def assessment_manage(request, curriculum_id):
 @role_required(CustomUser.Role.LECTURER)
 def assessment_edit(request, pk):
     assessment = get_object_or_404(
-        Assessment.objects.select_related("curriculum", "curriculum__program"),
+        Assessment.objects.select_related("course", "course__program"),
         pk=pk,
     )
-    curriculum = assessment.curriculum
-    _check_curriculum_permission_for_lecturer(request.user, curriculum)
+    course = assessment.course
+    _check_course_permission_for_lecturer(request.user, course)
 
     AssessmentForm = modelform_factory(
         Assessment,
@@ -88,12 +88,12 @@ def assessment_edit(request, pk):
         form = AssessmentForm(request.POST, instance=assessment)
         if form.is_valid():
             form.save()
-            return redirect("assessments:assessment_manage", curriculum_id=curriculum.id)
+            return redirect("assessments:assessment_manage", course_id=course.id)
     else:
         form = AssessmentForm(instance=assessment)
 
     context = {
-        "curriculum": curriculum,
+        "course": course,
         "assessment": assessment,
         "form": form,
     }
@@ -103,18 +103,18 @@ def assessment_edit(request, pk):
 @role_required(CustomUser.Role.LECTURER)
 def assessment_delete(request, pk):
     assessment = get_object_or_404(
-        Assessment.objects.select_related("curriculum", "curriculum__program"),
+        Assessment.objects.select_related("course", "course__program"),
         pk=pk,
     )
-    curriculum = assessment.curriculum
-    _check_curriculum_permission_for_lecturer(request.user, curriculum)
+    course = assessment.course
+    _check_course_permission_for_lecturer(request.user, course)
 
     if request.method == "POST":
         assessment.delete()
-        return redirect("assessments:assessment_manage", curriculum_id=curriculum.id)
+        return redirect("assessments:assessment_manage", course_id=course.id)
 
     context = {
-        "curriculum": curriculum,
+        "course": course,
         "assessment": assessment,
     }
     return render(request, "assessments/assessment_confirm_delete.html", context)
@@ -124,18 +124,18 @@ def assessment_delete(request, pk):
 def assessment_lo_mapping(request, pk):
     """
     Tek bir assessment için:
-    - Curriculum'daki tüm LO'ları listeler
+    - Course'daki tüm LO'ları listeler
     - Her LO için yüzde girilerek mapping yapılır.
     """
     assessment = get_object_or_404(
-        Assessment.objects.select_related("curriculum", "curriculum__program"),
+        Assessment.objects.select_related("course", "course__program"),
         pk=pk,
     )
-    curriculum = assessment.curriculum
-    _check_curriculum_permission_for_lecturer(request.user, curriculum)
+    course = assessment.course
+    _check_course_permission_for_lecturer(request.user, course)
 
     los = LearningOutcome.objects.filter(
-        curriculum=curriculum
+        course=course
     ).order_by("code")
 
     existing = {
@@ -180,7 +180,7 @@ def assessment_lo_mapping(request, pk):
                     weight_in_assessment=weight,
                 )
 
-        return redirect("assessments:assessment_manage", curriculum_id=curriculum.id)
+        return redirect("assessments:assessment_manage", course_id=course.id)
 
     # GET: template için satır listesi
     rows = []
@@ -194,7 +194,7 @@ def assessment_lo_mapping(request, pk):
         )
 
     context = {
-        "curriculum": curriculum,
+        "course": course,
         "assessment": assessment,
         "rows": rows,
     }
@@ -208,14 +208,14 @@ def assessment_grade_manage(request, pk):
     Burada **raw_score** alanını kullanıyoruz; `score` field'ı yok.
     """
     assessment = get_object_or_404(
-        Assessment.objects.select_related("curriculum", "curriculum__program"),
+        Assessment.objects.select_related("course", "course__program"),
         pk=pk,
     )
-    curriculum = assessment.curriculum
-    _check_curriculum_permission_for_lecturer(request.user, curriculum)
+    course = assessment.course
+    _check_course_permission_for_lecturer(request.user, course)
 
     # Bu dersin öğrencileri
-    students = curriculum.students.all().order_by("last_name", "first_name", "username")
+    students = course.students.all().order_by("last_name", "first_name", "username")
 
     # Mevcut sonuçları çek
     existing_results = StudentAssessmentResult.objects.filter(
@@ -275,7 +275,7 @@ def assessment_grade_manage(request, pk):
         )
 
     context = {
-        "curriculum": curriculum,
+        "course": course,
         "assessment": assessment,
         "rows": rows,
     }

@@ -4,7 +4,7 @@ from django.core.exceptions import PermissionDenied
 from accounts.decorators import role_required
 from accounts.models import CustomUser
 from organizations.models import Program
-from curriculum.models import Curriculum
+from courses.models import Course
 from .models import ProgramOutcome, LearningOutcome, LearningOutcomeProgramOutcome
 from .forms import ProgramOutcomeForm, LearningOutcomeForm
 
@@ -84,41 +84,41 @@ def program_outcome_delete(request, pk):
     return render(request, "outcomes/program_outcome_confirm_delete.html", context)
 
 
-def _check_curriculum_permission_for_lecturer(user: CustomUser, curriculum: Curriculum):
+def _check_course_permission_for_lecturer(user: CustomUser, course: Course):
     """
-    Lecturer sadece kendisine atanmış curriculum'lar için LO yönetebilsin.
+    Lecturer sadece kendisine atanmış course'lar için LO yönetebilsin.
     Admin her şeye girebilir.
     """
     if user.is_admin:
         return
-    if curriculum.lecturer_id != user.id:
-        raise PermissionDenied("You are not allowed to manage this curriculum.")
+    if course.lecturer_id != user.id:
+        raise PermissionDenied("You are not allowed to manage this course.")
 
 
 @role_required(CustomUser.Role.LECTURER)
-def learning_outcome_manage(request, curriculum_id):
-    curriculum = get_object_or_404(
-        Curriculum.objects.select_related("program"),
-        id=curriculum_id,
+def learning_outcome_manage(request, course_id):
+    course = get_object_or_404(
+        Course.objects.select_related("program"),
+        id=course_id,
     )
-    _check_curriculum_permission_for_lecturer(request.user, curriculum)
+    _check_course_permission_for_lecturer(request.user, course)
 
     los = LearningOutcome.objects.filter(
-        curriculum=curriculum
+        course=course
     ).prefetch_related("program_outcomes")
 
     if request.method == "POST":
         form = LearningOutcomeForm(request.POST)
         if form.is_valid():
             lo = form.save(commit=False)
-            lo.curriculum = curriculum
+            lo.course = course
             lo.save()
-            return redirect("outcomes:learning_outcome_manage", curriculum_id=curriculum.id)
+            return redirect("outcomes:learning_outcome_manage", course_id=course.id)
     else:
         form = LearningOutcomeForm()
 
     context = {
-        "curriculum": curriculum,
+        "course": course,
         "los": los,
         "form": form,
     }
@@ -128,22 +128,22 @@ def learning_outcome_manage(request, curriculum_id):
 @role_required(CustomUser.Role.LECTURER)
 def learning_outcome_edit(request, pk):
     lo = get_object_or_404(
-        LearningOutcome.objects.select_related("curriculum", "curriculum__program"),
+        LearningOutcome.objects.select_related("course", "course__program"),
         pk=pk,
     )
-    curriculum = lo.curriculum
-    _check_curriculum_permission_for_lecturer(request.user, curriculum)
+    course = lo.course
+    _check_course_permission_for_lecturer(request.user, course)
 
     if request.method == "POST":
         form = LearningOutcomeForm(request.POST, instance=lo)
         if form.is_valid():
             form.save()
-            return redirect("outcomes:learning_outcome_manage", curriculum_id=curriculum.id)
+            return redirect("outcomes:learning_outcome_manage", course_id=course.id)
     else:
         form = LearningOutcomeForm(instance=lo)
 
     context = {
-        "curriculum": curriculum,
+        "course": course,
         "form": form,
         "lo": lo,
     }
@@ -153,18 +153,18 @@ def learning_outcome_edit(request, pk):
 @role_required(CustomUser.Role.LECTURER)
 def learning_outcome_delete(request, pk):
     lo = get_object_or_404(
-        LearningOutcome.objects.select_related("curriculum", "curriculum__program"),
+        LearningOutcome.objects.select_related("course", "course__program"),
         pk=pk,
     )
-    curriculum = lo.curriculum
-    _check_curriculum_permission_for_lecturer(request.user, curriculum)
+    course = lo.course
+    _check_course_permission_for_lecturer(request.user, course)
 
     if request.method == "POST":
         lo.delete()
-        return redirect("outcomes:learning_outcome_manage", curriculum_id=curriculum.id)
+        return redirect("outcomes:learning_outcome_manage", course_id=course.id)
 
     context = {
-        "curriculum": curriculum,
+        "course": course,
         "lo": lo,
     }
     return render(request, "outcomes/learning_outcome_confirm_delete.html", context)
@@ -178,13 +178,13 @@ def learning_outcome_mapping(request, pk):
     - Her PO için yüzde girilerek mapping yapılır.
     """
     lo = get_object_or_404(
-        LearningOutcome.objects.select_related("curriculum", "curriculum__program"),
+        LearningOutcome.objects.select_related("course", "course__program"),
         pk=pk,
     )
-    curriculum = lo.curriculum
-    _check_curriculum_permission_for_lecturer(request.user, curriculum)
+    course = lo.course
+    _check_course_permission_for_lecturer(request.user, course)
 
-    program = curriculum.program
+    program = course.program
     pos = ProgramOutcome.objects.filter(program=program).order_by("order", "code")
 
     # Mevcut mapping'leri dictionary olarak tutalım
@@ -233,7 +233,7 @@ def learning_outcome_mapping(request, pk):
                     weight=weight,
                 )
 
-        return redirect("outcomes:learning_outcome_manage", curriculum_id=curriculum.id)
+        return redirect("outcomes:learning_outcome_manage", course_id=course.id)
 
     # GET → template'e PO + mevcut weight listesi gönder
     rows = []
@@ -247,7 +247,7 @@ def learning_outcome_mapping(request, pk):
         )
 
     context = {
-        "curriculum": curriculum,
+        "course": course,
         "lo": lo,
         "rows": rows,
     }

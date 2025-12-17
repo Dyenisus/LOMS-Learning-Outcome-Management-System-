@@ -11,7 +11,7 @@ class ProgramOutcomeAdmin(admin.ModelAdmin):
 
 @admin.register(LearningOutcome)
 class LearningOutcomeAdmin(admin.ModelAdmin):
-    list_display = ("code", "short_title", "curriculum", "order", "active")
-    list_filter = ("curriculum", "active")
+    list_display = ("code", "short_title", "course", "order", "active")
+    list_filter = ("course", "active")
     search_fields = ("code", "short_title", "description")
     exclude = ("program_outcomes",)

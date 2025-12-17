@@ -1,6 +1,6 @@
 from django.db import models
 from organizations.models import Program
-from curriculum.models import Curriculum
+from courses.models import Course
 
 
 class ProgramOutcome(models.Model):
@@ -50,8 +50,8 @@ class LearningOutcome(models.Model):
     Lecturer burayı yönetecek.
     LO → bir veya birden fazla PO'ya bağlanabilir.
     """
-    curriculum = models.ForeignKey(
-        Curriculum,
+    course = models.ForeignKey(
+        Course,
         on_delete=models.CASCADE,
         related_name="learning_outcomes",
     )
@@ -86,11 +86,11 @@ class LearningOutcome(models.Model):
     )
 
     class Meta:
-        unique_together = ("curriculum", "code")
-        ordering = ["curriculum", "order", "code"]
+        unique_together = ("course", "code")
+        ordering = ["course", "order", "code"]
 
     def __str__(self):
-        return f"{self.curriculum.code} - {self.code}: {self.short_title}"
+        return f"{self.course.code} - {self.code}: {self.short_title}"
 
 class LearningOutcomeProgramOutcome(models.Model):
     learning_outcome = models.ForeignKey(

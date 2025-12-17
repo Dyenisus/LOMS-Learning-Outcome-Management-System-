@@ -4,9 +4,9 @@
 <h2>Enter Grades – {{ assessment.name }}</h2>
 
 <p>
-    Curriculum:
-    <strong>{{ curriculum.code }} - {{ curriculum.name }}</strong><br>
-    Program: {{ curriculum.program.code }} - {{ curriculum.program.name }}<br>
+    Course:
+    <strong>{{ course.code }} - {{ course.name }}</strong><br>
+    Program: {{ course.program.code }} - {{ course.program.name }}<br>
     Max Score: {{ assessment.max_score }}
 </p>
 
@@ -47,7 +47,7 @@
             {% empty %}
                 <tr>
                     <td colspan="4">
-                        No students matched for this curriculum (by grade & faculty).
+                        No students matched for this course (by grade & faculty).
                     </td>
                 </tr>
             {% endfor %}
@@ -59,6 +59,6 @@
 </form>
 
 <p>
-    <a href="{% url 'assessments:assessment_manage' curriculum.id %}">Back to Assessment List</a>
+    <a href="{% url 'assessments:assessment_manage' course.id %}">Back to Assessment List</a>
 </p>
 {% endblock %}

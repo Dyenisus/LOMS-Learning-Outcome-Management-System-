@@ -1,7 +1,7 @@
 from django.db import models
 from django.conf import settings
 
-from curriculum.models import Curriculum
+from courses.models import Course
 from outcomes.models import LearningOutcome
 
 
@@ -13,8 +13,8 @@ class Assessment(models.Model):
         PROJECT = "PROJECT", "Project"
         OTHER = "OTHER", "Other"
 
-    curriculum = models.ForeignKey(
-        Curriculum,
+    course = models.ForeignKey(
+        Course,
         on_delete=models.CASCADE,
         related_name="assessments",
     )
@@ -38,11 +38,11 @@ class Assessment(models.Model):
     )
 
     def __str__(self):
-        return f"{self.curriculum.code} - {self.name}"
+        return f"{self.course.code} - {self.name}"
 
     class Meta:
-        ordering = ["curriculum", "type", "name"]
-        unique_together = ("curriculum", "name")
+        ordering = ["course", "type", "name"]
+        unique_together = ("course", "name")
         verbose_name = "Assessment"
         verbose_name_plural = "Assessments"
 

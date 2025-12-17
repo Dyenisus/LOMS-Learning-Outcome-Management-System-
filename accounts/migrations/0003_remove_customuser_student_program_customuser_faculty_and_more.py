@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('accounts', '0002_initial'),
-        ('curriculum', '0001_initial'),
+        ('courses', '0001_initial'),
         ('organizations', '0001_initial'),
     ]
 
@@ -24,8 +24,8 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='customuser',
-            name='lecturer_curricula',
-            field=models.ManyToManyField(blank=True, help_text='Lecturer için sorumlu olduğu Curriculum(lar)', related_name='lecturers', to='curriculum.curriculum'),
+            name='lecturer_courses',
+            field=models.ManyToManyField(blank=True, help_text='Lecturer için sorumlu olduğu Course(lar)', related_name='lecturers', to='courses.course'),
         ),
         migrations.AddField(
             model_name='customuser',

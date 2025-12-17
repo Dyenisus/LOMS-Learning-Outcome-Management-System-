@@ -83,11 +83,11 @@ class CustomUser(AbstractUser):
         help_text="Lecturer için sorumlu olduğu Program(lar)",
     )
 
-    lecturer_curricula = models.ManyToManyField(
-        "curriculum.Curriculum",
+    lecturer_courses = models.ManyToManyField(
+        "courses.Course",
         blank=True,
         related_name="lecturers",
-        help_text="Lecturer için sorumlu olduğu Curriculum(lar)",
+        help_text="Lecturer için sorumlu olduğu Course(lar)",
     )
 
     phone = models.CharField(

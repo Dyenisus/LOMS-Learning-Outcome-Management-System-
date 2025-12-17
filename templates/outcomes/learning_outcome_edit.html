@@ -4,7 +4,7 @@
 <h2>Edit LO: {{ lo.code }} - {{ lo.short_title }}</h2>
 
 <p>
-    Curriculum: {{ curriculum.code }} - {{ curriculum.name }}
+    Course: {{ course.code }} - {{ course.name }}
 </p>
 
 <form method="post">
@@ -14,7 +14,7 @@
 </form>
 
 <p>
-    <a href="{% url 'outcomes:learning_outcome_manage' curriculum.id %}">
+    <a href="{% url 'outcomes:learning_outcome_manage' course.id %}">
         Back to LO List
     </a>
 </p>

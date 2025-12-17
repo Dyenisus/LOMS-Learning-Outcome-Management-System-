@@ -4,8 +4,8 @@
 <h2>LO → PO Mapping (with weights)</h2>
 
 <p>
-    Curriculum:
-    <strong>{{ curriculum.code }} - {{ curriculum.name }}</strong><br>
+    Course:
+    <strong>{{ course.code }} - {{ course.name }}</strong><br>
     LO:
     <strong>{{ lo.code }} - {{ lo.short_title }}</strong>
 </p>
@@ -45,7 +45,7 @@
 </form>
 
 <p>
-    <a href="{% url 'outcomes:learning_outcome_manage' curriculum.id %}">
+    <a href="{% url 'outcomes:learning_outcome_manage' course.id %}">
         Back to LO List
     </a>
 </p>

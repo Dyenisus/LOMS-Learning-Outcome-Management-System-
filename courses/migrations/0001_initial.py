@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Curriculum',
+            name='Course',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('code', models.CharField(max_length=50)),
@@ -26,9 +26,9 @@ class Migration(migrations.Migration):
                 ('ects', models.DecimalField(blank=True, decimal_places=1, help_text='ECTS / AKTS', max_digits=4, null=True)),
                 ('credit', models.DecimalField(blank=True, decimal_places=1, help_text='Yerel kredi', max_digits=4, null=True)),
                 ('description', models.TextField(blank=True, help_text='Ders açıklaması')),
-                ('lecturer', models.ForeignKey(blank=True, help_text='Dersin genel sorumlu öğretim üyesi (program bazında).', null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='lecturer_curricula_assigned', to=settings.AUTH_USER_MODEL)),
-                ('program', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='curricula', to='organizations.program')),
-                ('students', models.ManyToManyField(blank=True, help_text='Bu derse kayıtlı öğrenciler (otomatik atanır).', related_name='enrolled_curricula', to=settings.AUTH_USER_MODEL)),
+                ('lecturer', models.ForeignKey(blank=True, help_text='Dersin genel sorumlu öğretim üyesi (program bazında).', null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='lecturer_courses_assigned', to=settings.AUTH_USER_MODEL)),
+                ('program', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='courses', to='organizations.program')),
+                ('students', models.ManyToManyField(blank=True, help_text='Bu derse kayıtlı öğrenciler (otomatik atanır).', related_name='enrolled_courses', to=settings.AUTH_USER_MODEL)),
             ],
             options={
                 'ordering': ['program', 'year', 'semester', 'code'],

@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
-{% if curriculum %}
-    <h2>Edit Curriculum: {{ curriculum.code }} - {{ curriculum.name }}</h2>
+{% if course %}
+    <h2>Edit Course: {{ course.code }} - {{ course.name }}</h2>
 {% else %}
-    <h2>Add New Curriculum</h2>
+    <h2>Add New Course</h2>
 {% endif %}
 
 <form method="post">
@@ -14,8 +14,8 @@
 </form>
 
 <p>
-    <a href="{% url 'curriculum:curriculum_list' %}">
-        Back to Curriculum List
+    <a href="{% url 'courses:course_list' %}">
+        Back to Course List
     </a>
 </p>
 {% endblock %}

@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Learning Outcomes for {{ curriculum.code }} - {{ curriculum.name }}</h2>
+<h2>Learning Outcomes for {{ course.code }} - {{ course.name }}</h2>
 <p>
-    Program: {{ curriculum.program.code }} - {{ curriculum.program.name }}
+    Program: {{ course.program.code }} - {{ course.program.name }}
 </p>
 
 <h3>Existing LOs</h3>
@@ -40,6 +40,6 @@
 </form>
 
 <p>
-    <a href="{% url 'curriculum:lecturer_dashboard' %}">Back to Lecturer Panel</a>
+    <a href="{% url 'courses:lecturer_dashboard' %}">Back to Lecturer Panel</a>
 </p>
 {% endblock %}

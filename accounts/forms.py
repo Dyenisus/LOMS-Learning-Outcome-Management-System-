@@ -28,7 +28,7 @@ class UserCreateForm(forms.ModelForm):
             "student_program",
             "faculty_member_faculty",
             "lecturer_programs",
-            "lecturer_curricula",
+            "lecturer_courses",
         ]
 
     def __init__(self, *args, **kwargs):
@@ -47,9 +47,9 @@ class UserCreateForm(forms.ModelForm):
         self.fields["student_program"].required = False
         self.fields["faculty_member_faculty"].required = False
         self.fields["lecturer_programs"].required = False
-        self.fields["lecturer_curricula"].required = False
+        self.fields["lecturer_courses"].required = False
         self.fields["lecturer_programs"].help_text = ""
-        self.fields["lecturer_curricula"].help_text = ""
+        self.fields["lecturer_courses"].help_text = ""
 
     def clean(self):
         cleaned = super().clean()
@@ -77,12 +77,7 @@ class UserCreateForm(forms.ModelForm):
 
         elif role == CustomUser.Role.FACULTY_MEMBER:
             if not faculty_member_faculty:
-                self.add_error("faculty", "Faculty is required for faculty members.")
-
-        # Lecturer için en az bir program isteyebiliriz (zorunlu yapmak istersen açarsın)
-        # elif role == CustomUser.Role.LECTURER:
-        #     if not cleaned.get("lecturer_programs"):
-        #         self.add_error("lecturer_programs", "At least one program is required for lecturers.")
+                self.add_error("faculty_member_faculty", "Faculty is required for faculty members.")
 
         return cleaned
 

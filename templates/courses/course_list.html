@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Curriculum List</h2>
+<h2>Course List</h2>
 
 {% if selected_program %}
     <p>
@@ -11,13 +11,13 @@
 {% endif %}
 
 <p>
-    <a href="{% url 'curriculum:curriculum_create' %}{% if selected_program %}?program={{ selected_program.id }}{% endif %}">
-        Add New Curriculum
+    <a href="{% url 'courses:course_create' %}{% if selected_program %}?program={{ selected_program.id }}{% endif %}">
+        Add New Course
     </a>
 </p>
 
 <ul>
-    {% for c in curricula %}
+    {% for c in courses %}
         <li>
             <strong>{{ c.code }} - {{ c.name }}</strong>
             (Program: {{ c.program.code }})
@@ -42,11 +42,11 @@
 
             | Students enrolled: {{ c.students.count }}
 
-            | <a href="{% url 'curriculum:curriculum_edit' c.id %}">Edit</a>
-			| <a href="{% url 'curriculum:curriculum_delete' c.id %}">Delete</a>
+            | <a href="{% url 'courses:course_edit' c.id %}">Edit</a>
+			| <a href="{% url 'courses:course_delete' c.id %}">Delete</a>
         </li>
     {% empty %}
-        <li>No curricula found.</li>
+        <li>No courses found.</li>
     {% endfor %}
 </ul>
 {% endblock %}

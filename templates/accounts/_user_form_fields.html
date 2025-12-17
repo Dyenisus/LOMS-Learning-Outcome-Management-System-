@@ -1,0 +1,55 @@
+{% if form.non_field_errors %}
+<div class="form-errors">
+    {% for error in form.non_field_errors %}
+        <div>{{ error }}</div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="form-grid">
+    {% include "accounts/_form_field.html" with field=form.username %}
+    {% include "accounts/_form_field.html" with field=form.email %}
+    {% include "accounts/_form_field.html" with field=form.phone %}
+    {% include "accounts/_form_field.html" with field=form.role %}
+    {% include "accounts/_form_field.html" with field=form.password1 %}
+    {% include "accounts/_form_field.html" with field=form.password2 %}
+</div>
+
+<div class="role-sections">
+    <div class="role-fields" data-role-group="STUDENT" style="display:none;">
+        <h4>Student Details</h4>
+        {% include "accounts/_form_field.html" with field=form.student_faculty %}
+        {% include "accounts/_form_field.html" with field=form.student_program %}
+        {% include "accounts/_form_field.html" with field=form.student_grade %}
+    </div>
+
+    <div class="role-fields" data-role-group="FACULTY_MEMBER" style="display:none;">
+        <h4>Faculty Member Details</h4>
+        {% include "accounts/_form_field.html" with field=form.faculty_member_faculty %}
+    </div>
+
+</div>
+
+<script>
+(function() {
+    const roleField = document.getElementById("id_role");
+    const roleGroups = document.querySelectorAll("[data-role-group]");
+    if (!roleField || !roleGroups.length) {
+        return;
+    }
+
+    const toggleRoleGroups = () => {
+        const selectedRole = roleField.value;
+        roleGroups.forEach((group) => {
+            if (group.dataset.roleGroup === selectedRole) {
+                group.style.display = "";
+            } else {
+                group.style.display = "none";
+            }
+        });
+    };
+
+    toggleRoleGroups();
+    roleField.addEventListener("change", toggleRoleGroups);
+})();
+</script>

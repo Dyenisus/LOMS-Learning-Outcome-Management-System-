@@ -5,10 +5,10 @@ from .models import Faculty, Program
 class FacultyForm(forms.ModelForm):
     class Meta:
         model = Faculty
-        fields = ["code", "name", "description", "responsible"]
+        fields = ["code", "name", "responsible"]
 
 
 class ProgramForm(forms.ModelForm):
     class Meta:
         model = Program
-        fields = ["code", "name", "description", "faculty", "coordinator"]
+        fields = ["code", "name", "faculty", "coordinator"]

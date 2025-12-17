@@ -27,6 +27,7 @@ def user_create(request):
 
     users = (
         CustomUser.objects
+        .exclude(role=CustomUser.Role.ADMIN)
         .order_by("username")
         .select_related(
             "student_faculty",

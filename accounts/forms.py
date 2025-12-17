@@ -34,6 +34,13 @@ class UserCreateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        # Admin seçeneğini Student Affairs panelinden kaldır
+        self.fields["role"].choices = [
+            choice
+            for choice in self.fields["role"].choices
+            if choice[0] != CustomUser.Role.ADMIN
+        ]
+
         # Hepsini opsiyonel başlat, role göre clean'de zorunlu yaparız
         self.fields["student_grade"].required = False
         self.fields["student_faculty"].required = False
@@ -41,6 +48,8 @@ class UserCreateForm(forms.ModelForm):
         self.fields["faculty_member_faculty"].required = False
         self.fields["lecturer_programs"].required = False
         self.fields["lecturer_curricula"].required = False
+        self.fields["lecturer_programs"].help_text = ""
+        self.fields["lecturer_curricula"].help_text = ""
 
     def clean(self):
         cleaned = super().clean()

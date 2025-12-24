@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import (
 	faculty_program_list,
+	faculty_create,
 	program_create,
 	program_edit,
 	program_delete,
@@ -13,6 +14,7 @@ app_name = "organizations"
 
 urlpatterns = [
     path("", faculty_program_list, name="faculty_program_list"),  # Student Affairs paneli
+    path("faculty/new/", faculty_create, name="faculty_create"),
     path("programs/new/", program_create, name="program_create"),
 	path("programs/<int:pk>/edit/", program_edit, name="program_edit"),
 	path("programs/<int:pk>/delete/", program_delete, name="program_delete"),

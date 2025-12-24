@@ -2,69 +2,116 @@
 
 {% block content %}
 <section class="card">
-    <h2 class="page-title">Faculty & Program Management</h2>
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
+        <h2 class="page-title" style="margin: 0;">🏛️ Faculty & Program Management</h2>
+        <div style="display: flex; gap: 0.75rem;">
+            <a href="{% url 'organizations:faculty_create' %}"
+               style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3); transition: all 0.3s ease; display: inline-block;"
+               onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(102, 126, 234, 0.4)';"
+               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.3)';">
+                ✚ Add Faculty
+            </a>
+            <a href="{% url 'organizations:program_create' %}"
+               style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3); transition: all 0.3s ease; display: inline-block;"
+               onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(102, 126, 234, 0.4)';"
+               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.3)';">
+                ✚ Add Program
+            </a>
+        </div>
+    </div>
+    
     {% if faculties %}
-        <div class="stack">
+        <div style="display: grid; gap: 1.5rem;">
             {% for faculty in faculties %}
-                <div class="card" style="padding:1rem;border-radius:10px;">
-                    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;">
-                        <div>
-                            <strong>{{ faculty.code }} – {{ faculty.name }}</strong>
-                            {% if faculty.responsible %}
-                                <span class="muted">Responsible: {{ faculty.responsible.username }}</span>
-                            {% endif %}
+                <div style="border: 2px solid #e0e0e0; border-radius: 12px; padding: 1.5rem; background: linear-gradient(135deg, #fafbfc 0%, #ffffff 100%); box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s ease;"
+                     onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.12)'; this.style.borderColor='#667eea';"
+                     onmouseout="this.style.boxShadow='0 2px 8px rgba(0,0,0,0.08)'; this.style.borderColor='#e0e0e0';">
+                    
+                    <!-- Faculty Header -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.3rem; box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);">
+                                🏛️
+                            </div>
+                            <div>
+                                <div style="font-weight: 700; color: #667eea; font-size: 0.9rem;">{{ faculty.code }}</div>
+                                <div style="font-weight: 600; color: #2c3e50; font-size: 1.15rem;">{{ faculty.name }}</div>
+                                {% if faculty.responsible %}
+                                <div style="color: #666; font-size: 0.85rem; margin-top: 0.25rem;">👤 Responsible: {{ faculty.responsible.username }}</div>
+                                {% endif %}
+                            </div>
                         </div>
-                        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
-                            <a class="button-link" href="{% url 'organizations:faculty_edit' faculty.id %}">Edit</a>
-                            <a class="button-link" href="{% url 'organizations:faculty_delete' faculty.id %}">Delete</a>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <a href="{% url 'organizations:faculty_edit' faculty.id %}"
+                               style="background: #4CAF50; color: white; padding: 0.5rem 1rem; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: all 0.3s ease;"
+                               onmouseover="this.style.background='#45a049';"
+                               onmouseout="this.style.background='#4CAF50';">
+                                ✏️ Edit
+                            </a>
+                            <a href="{% url 'organizations:faculty_delete' faculty.id %}"
+                               style="background: #f44336; color: white; padding: 0.5rem 1rem; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: all 0.3s ease;"
+                               onmouseover="this.style.background='#da190b';"
+                               onmouseout="this.style.background='#f44336';">
+                                🗑️ Delete
+                            </a>
                         </div>
                     </div>
+                    
                     {% if faculty.description %}
-                        <p class="muted" style="margin-top:0.5rem;">{{ faculty.description }}</p>
+                    <div style="padding: 0.75rem 1rem; background: #f8f9fa; border-radius: 8px; color: #666; font-size: 0.95rem; margin-bottom: 1rem;">
+                        {{ faculty.description }}
+                    </div>
                     {% endif %}
-
+                    
+                    <!-- Programs Table -->
                     {% if faculty.programs.all %}
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Program</th>
-                                    <th>Coordinator</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for program in faculty.programs.all %}
-                                    <tr>
-                                        <td>{{ program.code }} – {{ program.name }}</td>
-                                        <td>{{ program.coordinator|default:"-" }}</td>
-                                        <td style="text-align:right;">
-                                            <a class="button-link" href="{% url 'courses:course_list' %}?program={{ program.id }}">Courses</a>
-                                            · <a class="button-link" href="{% url 'organizations:program_edit' program.id %}">Edit</a>
-                                            · <a class="button-link" href="{% url 'organizations:program_delete' program.id %}">Delete</a>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                    <div style="margin-top: 1rem; padding-top: 1rem; border-top: 2px solid #e8e8e8;">
+                        <div style="font-weight: 600; color: #667eea; margin-bottom: 0.75rem; font-size: 0.95rem;">📚 Programs:</div>
+                        <div style="display: grid; gap: 0.75rem;">
+                            {% for program in faculty.programs.all %}
+                                <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 1rem; background: #ffffff; transition: all 0.3s ease;"
+                                     onmouseover="this.style.borderColor='#667eea'; this.style.background='#f8f9ff';"
+                                     onmouseout="this.style.borderColor='#e0e0e0'; this.style.background='#ffffff';">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+                                        <div style="flex: 1;">
+                                            <div style="font-weight: 700; color: #667eea; font-size: 0.85rem;">{{ program.code }}</div>
+                                            <div style="font-weight: 600; color: #333; font-size: 1rem; margin: 0.25rem 0;">{{ program.name }}</div>
+                                            <div style="color: #999; font-size: 0.85rem;">👤 Coordinator: {{ program.coordinator|default:"-" }}</div>
+                                        </div>
+                                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                            <a href="{% url 'courses:course_list' %}?program={{ program.id }}"
+                                               style="background: #667eea; color: white; padding: 0.45rem 0.9rem; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.85rem; transition: all 0.3s ease;"
+                                               onmouseover="this.style.background='#5568d3';"
+                                               onmouseout="this.style.background='#667eea';">
+                                                📖 Courses
+                                            </a>
+                                            <a href="{% url 'organizations:program_edit' program.id %}"
+                                               style="background: #4CAF50; color: white; padding: 0.45rem 0.9rem; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.85rem; transition: all 0.3s ease;"
+                                               onmouseover="this.style.background='#45a049';"
+                                               onmouseout="this.style.background='#4CAF50';">
+                                                ✏️ Edit
+                                            </a>
+                                            <a href="{% url 'organizations:program_delete' program.id %}"
+                                               style="background: #f44336; color: white; padding: 0.45rem 0.9rem; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.85rem; transition: all 0.3s ease;"
+                                               onmouseover="this.style.background='#da190b';"
+                                               onmouseout="this.style.background='#f44336';">
+                                                🗑️ Delete
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
                     {% endif %}
                 </div>
             {% endfor %}
         </div>
     {% else %}
-        <p class="muted">No faculties yet.</p>
+        <div style="text-align: center; padding: 3rem 1rem; background: #f9f9f9; border-radius: 12px; border: 2px dashed #ddd;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">🏛️</div>
+            <p style="color: #999; font-size: 1.1rem; margin: 0;">No faculties yet.</p>
+        </div>
     {% endif %}
-</section>
-
-<section class="card">
-    <h3 class="section-title">Add New Faculty</h3>
-    <form method="post">
-        {% csrf_token %}
-        {{ faculty_form.as_p }}
-        <button type="submit">Add Faculty</button>
-    </form>
-</section>
-
-<section class="card">
-    <a class="button-link" href="{% url 'organizations:program_create' %}">+ Add New Program</a>
 </section>
 {% endblock %}

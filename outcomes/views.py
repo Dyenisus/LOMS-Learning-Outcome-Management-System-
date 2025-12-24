@@ -27,6 +27,18 @@ def program_outcome_manage(request, program_id):
 
     outcomes = ProgramOutcome.objects.filter(program=program).order_by("order", "code")
 
+    context = {
+        "program": program,
+        "outcomes": outcomes,
+    }
+    return render(request, "outcomes/program_outcome_manage.html", context)
+
+
+@role_required(CustomUser.Role.FACULTY_MEMBER)
+def program_outcome_create(request, program_id):
+    program = get_object_or_404(Program, id=program_id)
+    _check_program_permission(request.user, program)
+
     if request.method == "POST":
         form = ProgramOutcomeForm(request.POST)
         if form.is_valid():
@@ -39,10 +51,9 @@ def program_outcome_manage(request, program_id):
 
     context = {
         "program": program,
-        "outcomes": outcomes,
         "form": form,
     }
-    return render(request, "outcomes/program_outcome_manage.html", context)
+    return render(request, "outcomes/program_outcome_create.html", context)
 
 
 @role_required(CustomUser.Role.FACULTY_MEMBER)
@@ -91,8 +102,44 @@ def _check_course_permission_for_lecturer(user: CustomUser, course: Course):
     """
     if user.is_admin:
         return
-    if course.lecturer_id != user.id:
-        raise PermissionDenied("You are not allowed to manage this course.")
+
+    # Ana lecturer FK kontrolü
+    if getattr(course, "lecturer_id", None) == user.id:
+        return
+
+    # Eğer M2M 'lecturers' alanı varsa, onu da kontrol et
+    if hasattr(course, "lecturers") and course.lecturers.filter(id=user.id).exists():
+        return
+
+    raise PermissionDenied("You are not allowed to manage learning outcomes for this course.")
+
+
+@role_required(CustomUser.Role.LECTURER)
+def learning_outcome_create(request, course_id):
+    """
+    Yeni learning outcome oluşturma sayfası.
+    """
+    course = get_object_or_404(
+        Course.objects.select_related("program"),
+        id=course_id,
+    )
+    _check_course_permission_for_lecturer(request.user, course)
+
+    if request.method == "POST":
+        form = LearningOutcomeForm(request.POST)
+        if form.is_valid():
+            lo = form.save(commit=False)
+            lo.course = course
+            lo.save()
+            return redirect("outcomes:learning_outcome_manage", course_id=course.id)
+    else:
+        form = LearningOutcomeForm()
+
+    context = {
+        "course": course,
+        "form": form,
+    }
+    return render(request, "outcomes/learning_outcome_create.html", context)
 
 
 @role_required(CustomUser.Role.LECTURER)

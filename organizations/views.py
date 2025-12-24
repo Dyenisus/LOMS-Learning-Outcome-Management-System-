@@ -29,6 +29,24 @@ def faculty_program_list(request):
 
 
 @role_required(CustomUser.Role.STUDENT_AFFAIRS)
+def faculty_create(request):
+    """
+    Student Affairs için:
+    - Yeni Faculty ekleme sayfası
+    """
+    if request.method == "POST":
+        form = FacultyForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("organizations:faculty_program_list")
+    else:
+        form = FacultyForm()
+
+    context = {"form": form}
+    return render(request, "organizations/faculty_form.html", context)
+
+
+@role_required(CustomUser.Role.STUDENT_AFFAIRS)
 def program_create(request):
     """
     Student Affairs için:

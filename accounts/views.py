@@ -82,10 +82,7 @@ def user_delete(request, pk):
         user_obj.delete()
         return redirect("accounts:user_create")
 
-    context = {
-        "user_obj": user_obj,
-    }
-    return render(request, "accounts/user_confirm_delete.html", context)
+    return render(request, "accounts/user_confirm_delete.html", {"user_obj": user_obj})
 
 @login_required
 def role_redirect(request):

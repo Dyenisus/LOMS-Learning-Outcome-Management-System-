@@ -1,37 +1,135 @@
 {% extends "base.html" %}
 
 {% block content %}
+
 <section class="card">
-    <h2 class="page-title">Student Dashboard</h2>
-    <div>
-        <p><strong>User:</strong> {{ student.username }}</p>
-        <p>
-            <strong>Program:</strong>
-            {% if program %}
-                {{ program.code }} – {{ program.name }}
-            {% else %}
-                -
-            {% endif %}
-        </p>
-        <p><strong>Grade / Year:</strong> {{ grade|default:"-" }}</p>
+    <h3 class="section-title" style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
+        📊 Academic Information
+    </h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+        <div style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); padding: 1.5rem; border-radius: 12px; border-left: 4px solid #667eea; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                <div style="width: 40px; height: 40px; background: #667eea; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                    👤
+                </div>
+                <div>
+                    <div style="font-size: 0.9rem; color: #666; font-weight: 600;">Student ID</div>
+                    <div style="font-weight: 700; color: #2c3e50; font-size: 1.1rem;">{{ student.username }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); padding: 1.5rem; border-radius: 12px; border-left: 4px solid #4CAF50; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                <div style="width: 40px; height: 40px; background: #4CAF50; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                    🏛️
+                </div>
+                <div>
+                    <div style="font-size: 0.9rem; color: #666; font-weight: 600;">Program</div>
+                    <div style="font-weight: 700; color: #2c3e50;">
+                        {% if program %}
+                            {{ program.code }} – {{ program.name }}
+                        {% else %}
+                            <em style="color: #666;">Not assigned</em>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); padding: 1.5rem; border-radius: 12px; border-left: 4px solid #ff9800; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                <div style="width: 40px; height: 40px; background: #ff9800; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                    📚
+                </div>
+                <div>
+                    <div style="font-size: 0.9rem; color: #666; font-weight: 600;">Current Grade</div>
+                    <div style="font-weight: 700; color: #2c3e50; font-size: 1.1rem;">
+                        {{ grade|default:"Not specified" }}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
 <section class="card">
-    <h3 class="section-title">My Courses</h3>
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+        <h3 class="section-title" style="display: flex; align-items: center; gap: 0.5rem; margin: 0;">
+            📚 My Courses
+            {% if courses %}
+                <span style="background: #667eea; color: white; padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.8rem; font-weight: 600;">
+                    {{ courses|length }}
+                </span>
+            {% endif %}
+        </h3>
+        {% if courses %}
+            <div style="font-size: 0.9rem; color: #666;">
+                Current semester courses
+            </div>
+        {% endif %}
+    </div>
+
     {% if courses %}
-        <ul>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.5rem;">
             {% for c in courses %}
-                <li>
-                    <a class="button-link" href="{% url 'accounts:student_course_detail' c.id %}">
-                        {{ c.code }} – {{ c.name }}
-                    </a>
-                    <small>({{ c.get_semester_display }})</small>
-                </li>
+                <div style="border: 2px solid #e0e0e0; border-radius: 16px; padding: 1.5rem; background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: all 0.3s ease; position: relative; overflow: hidden;"
+                     onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0 8px 24px rgba(0,0,0,0.15)'; this.style.borderColor='#667eea';"
+                     onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'; this.style.borderColor='#e0e0e0';">
+                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);"></div>
+
+                    <div style="display: flex; align-items: center; margin-bottom: 1.25rem;">
+                        <div style="width: 55px; height: 55px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.3rem; margin-right: 1rem; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                            📖
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="font-size: 0.9rem; color: #667eea; font-weight: 700; margin-bottom: 0.25rem; text-transform: uppercase; letter-spacing: 0.5px;">
+                                {{ c.code }}
+                            </div>
+                            <div style="font-weight: 600; color: #2c3e50; font-size: 1.1rem; line-height: 1.3;">
+                                {{ c.name }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span style="font-size: 0.8rem; color: #666;">👨‍🏫</span>
+                                <span style="font-size: 0.9rem; color: #666;">
+                                    {% if c.lecturer %}
+                                        {{ c.lecturer.get_full_name|default:c.lecturer.username|truncatechars:20 }}
+                                    {% else %}
+                                        Not assigned
+                                    {% endif %}
+                                </span>
+                            </div>
+                            <span style="background: #e3f2fd; color: #1976d2; padding: 0.3rem 0.7rem; border-radius: 6px; font-size: 0.8rem; font-weight: 600;">
+                                📅 {{ c.get_semester_display }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 0.75rem;">
+                        <a href="{% url 'accounts:student_course_detail' c.id %}"
+                           style="flex: 1; text-align: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 0.75rem 1rem; border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);"
+                           onmouseover="this.style.background='linear-gradient(135deg, #5568d3 0%, #6a419f 100%)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(102, 126, 234, 0.4)';"
+                           onmouseout="this.style.background='linear-gradient(135deg, #667eea 0%, #764ba2 100%)'; this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.3)';">
+                            👁️ View Details
+                        </a>
+                    </div>
+                </div>
             {% endfor %}
-        </ul>
+        </div>
     {% else %}
-        <p class="muted">No courses found for your program & grade.</p>
+        <div style="text-align: center; padding: 4rem 2rem; background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); border-radius: 16px; border: 2px dashed #ddd; margin-top: 1rem;">
+            <div style="font-size: 4rem; margin-bottom: 1.5rem;">📚</div>
+            <h4 style="margin: 0 0 0.5rem 0; color: #2c3e50; font-size: 1.3rem;">No Courses Found</h4>
+            <p style="color: #666; font-size: 1rem; margin: 0; max-width: 400px; margin: 0 auto;">
+                There are currently no courses assigned to your program and grade level. Please contact your academic advisor if you believe this is an error.
+            </p>
+        </div>
     {% endif %}
+</section>
 </section>
 {% endblock %}

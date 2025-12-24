@@ -10,6 +10,11 @@ urlpatterns = [
         name="assessment_manage",
     ),
     path(
+        "course/<int:course_id>/create/",
+        views.assessment_create,
+        name="assessment_create",
+    ),
+    path(
         "assessment/<int:pk>/edit/",
         views.assessment_edit,
         name="assessment_edit",

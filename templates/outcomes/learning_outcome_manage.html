@@ -1,45 +1,154 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Learning Outcomes for {{ course.code }} - {{ course.name }}</h2>
-<p>
-    Program: {{ course.program.code }} - {{ course.program.name }}
-</p>
+<section class="card" style="margin: 2rem auto; background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); border: none; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);">
+    <h2 style="text-align: center; color: #2c3e50; font-size: 2rem; margin-bottom: 2rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+        🎯 Learning Outcomes Management
+    </h2>
 
-<h3>Existing LOs</h3>
-<ul>
-    {% for lo in los %}
-        <li>
-            <strong>{{ lo.code }}</strong> - {{ lo.short_title }}
-            (Order: {{ lo.order }}, Active: {{ lo.active }})
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; margin-bottom: 2rem;">
+        <div style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); padding: 1rem; border-radius: 12px; border-left: 4px solid #667eea; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                <div style="width: 32px; height: 32px; background: #667eea; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.9rem;">
+                    🏛️
+                </div>
+                <div>
+                    <div style="font-size: 0.75rem; color: #666; font-weight: 600; line-height: 1.2;">Program</div>
+                    <div style="font-weight: 700; color: #2c3e50; font-size: 0.85rem; line-height: 1.2;">{{ course.program.code }} – {{ course.program.name }}</div>
+                </div>
+            </div>
+        </div>
 
-            {% if lo.program_outcomes.all %}
-                <br>
-                Mapped POs:
-                {% for po in lo.program_outcomes.all %}
-                    {{ po.code }}{% if not forloop.last %}, {% endif %}
-                {% endfor %}
-            {% endif %}
+        <div style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); padding: 1rem; border-radius: 12px; border-left: 4px solid #2196F3; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                <div style="width: 32px; height: 32px; background: #2196F3; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.9rem;">
+                    📚
+                </div>
+                <div>
+                    <div style="font-size: 0.75rem; color: #666; font-weight: 600; line-height: 1.2;">Course</div>
+                    <div style="font-weight: 700; color: #2c3e50; font-size: 0.85rem; line-height: 1.2;">{{ course.code }} – {{ course.name }}</div>
+                </div>
+            </div>
+        </div>
 
-            | <a href="{% url 'outcomes:learning_outcome_edit' lo.id %}">Edit</a>
-			| <a href="{% url 'outcomes:learning_outcome_mapping' lo.id %}">Edit PO Mapping / Weights</a>
-            | <a href="{% url 'outcomes:learning_outcome_delete' lo.id %}">Delete</a>
-        </li>
-    {% empty %}
-        <li>No Learning Outcomes yet.</li>
-    {% endfor %}
-</ul>
+        <div style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); padding: 1rem; border-radius: 12px; border-left: 4px solid #4CAF50; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                <div style="width: 32px; height: 32px; background: #4CAF50; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.9rem;">
+                    📊
+                </div>
+                <div>
+                    <div style="font-size: 0.75rem; color: #666; font-weight: 600; line-height: 1.2;">Total LO</div>
+                    <div style="font-weight: 700; color: #2c3e50; font-size: 1.2rem; line-height: 1.2;">{{ los|length }}</div>
+                </div>
+            </div>
+        </div>
 
-<hr>
+        <div style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); padding: 1rem; border-radius: 12px; border-left: 4px solid #ff9800; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                <div style="width: 32px; height: 32px; background: #ff9800; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.9rem;">
+                    📅
+                </div>
+                <div>
+                    <div style="font-size: 0.75rem; color: #666; font-weight: 600; line-height: 1.2;">Semester</div>
+                    <div style="font-weight: 700; color: #2c3e50; font-size: 0.85rem; line-height: 1.2;">{{ course.get_semester_display }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-<h3>Add New Learning Outcome</h3>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Add LO</button>
-</form>
+<section class="card">
+    <h3 class="section-title" style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
+        📋 Existing Learning Outcomes
+        {% if los %}
+            <span style="background: #667eea; color: white; padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.8rem; font-weight: 600;">
+                {{ los|length }}
+            </span>
+        {% endif %}
+    </h3>
 
-<p>
-    <a href="{% url 'courses:lecturer_dashboard' %}">Back to Lecturer Panel</a>
-</p>
+    {% if los %}
+        <div style="display: grid; gap: 1rem;">
+            {% for lo in los %}
+                <div style="border: 2px solid #e0e0e0; border-radius: 12px; padding: 1.5rem; background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s ease;"
+                     onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.12)'; this.style.borderColor='#667eea';"
+                     onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.08)'; this.style.borderColor='#e0e0e0';">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.2rem; box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);">
+                                {{ lo.code }}
+                            </div>
+                            <div>
+                                <div style="font-weight: 600; color: #2c3e50; font-size: 1.1rem; margin-bottom: 0.25rem;">{{ lo.short_title }}</div>
+                                <div style="display: flex; gap: 0.75rem; align-items: center;">
+                                    <span style="background: #e3f2fd; color: #1976d2; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">Order: {{ lo.order }}</span>
+                                    <span style="{% if lo.active %}background: #e8f5e9; color: #2e7d32;{% else %}background: #ffebee; color: #c62828;{% endif %} padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">
+                                        {% if lo.active %}Active{% else %}Inactive{% endif %}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if lo.program_outcomes.all %}
+                        <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                            <div style="font-size: 0.9rem; color: #666; margin-bottom: 0.5rem; font-weight: 600;">🎯 Mapped Program Outcomes:</div>
+                            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                                {% for po in lo.program_outcomes.all %}
+                                    <span style="background: #fff3e0; color: #f57c00; padding: 0.3rem 0.6rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">
+                                        {{ po.code }}
+                                    </span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                        <a href="{% url 'outcomes:learning_outcome_edit' lo.id %}"
+                           style="background: #4CAF50; color: white; padding: 0.5rem 1rem; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(76, 175, 80, 0.3);"
+                           onmouseover="this.style.background='#45a049'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 8px rgba(76, 175, 80, 0.4)';"
+                           onmouseout="this.style.background='#4CAF50'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(76, 175, 80, 0.3)';">
+                            ✏️ Edit
+                        </a>
+                        <a href="{% url 'outcomes:learning_outcome_mapping' lo.id %}"
+                           style="background: #FF9800; color: white; padding: 0.5rem 1rem; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(255, 152, 0, 0.3);"
+                           onmouseover="this.style.background='#F57C00'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 8px rgba(255, 152, 0, 0.4)';"
+                           onmouseout="this.style.background='#FF9800'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(255, 152, 0, 0.3)';">
+                            🎯 PO Mapping
+                        </a>
+                        <a href="{% url 'outcomes:learning_outcome_delete' lo.id %}"
+                           style="background: #f44336; color: white; padding: 0.5rem 1rem; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(244, 67, 54, 0.3);"
+                           onmouseover="this.style.background='#da190b'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 8px rgba(244, 67, 54, 0.4)';"
+                           onmouseout="this.style.background='#f44336'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(244, 67, 54, 0.3)';">
+                            🗑️ Delete
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div style="text-align: center; padding: 4rem 2rem; background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); border-radius: 16px; border: 2px dashed #ddd;">
+            <div style="font-size: 4rem; margin-bottom: 1.5rem;">🎯</div>
+            <h4 style="margin: 0 0 0.5rem 0; color: #2c3e50; font-size: 1.3rem;">No Learning Outcomes Yet</h4>
+            <p style="color: #666; font-size: 1rem; margin: 0; max-width: 400px; margin: 0 auto;">
+                Start by adding your first learning outcome for this course.
+            </p>
+        </div>
+    {% endif %}
+
+    <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem; flex-wrap: wrap;">
+        <a href="{% url 'outcomes:learning_outcome_create' course.id %}"
+           style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3); display: inline-flex; align-items: center; gap: 0.5rem;"
+           onmouseover="this.style.background='linear-gradient(135deg, #5568d3 0%, #6a419f 100%)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(102, 126, 234, 0.4)';"
+           onmouseout="this.style.background='linear-gradient(135deg, #667eea 0%, #764ba2 100%)'; this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.3)';">
+            ✚ Add New Learning Outcome
+        </a>
+        <a href="{% url 'courses:lecturer_dashboard' %}"
+           style="background: #6c757d; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3); display: inline-flex; align-items: center; gap: 0.5rem;"
+           onmouseover="this.style.background='#5a6268'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(108, 117, 125, 0.4)';"
+           onmouseout="this.style.background='#6c757d'; this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(108, 117, 125, 0.3)';">
+            ← Back to Lecturer Panel
+        </a>
+    </div>
+</section>
 {% endblock %}

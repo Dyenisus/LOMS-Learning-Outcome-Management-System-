@@ -35,6 +35,39 @@ def _check_course_permission_for_lecturer(user: CustomUser, course: Course):
 
 
 @role_required(CustomUser.Role.LECTURER)
+def assessment_create(request, course_id):
+    """
+    Yeni assessment oluşturma sayfası.
+    """
+    course = get_object_or_404(
+        Course.objects.select_related("program"),
+        id=course_id,
+    )
+    _check_course_permission_for_lecturer(request.user, course)
+
+    AssessmentForm = modelform_factory(
+        Assessment,
+        fields=["name", "type", "weight_in_course", "max_score", "date"],
+    )
+
+    if request.method == "POST":
+        form = AssessmentForm(request.POST)
+        if form.is_valid():
+            assessment = form.save(commit=False)
+            assessment.course = course
+            assessment.save()
+            return redirect("assessments:assessment_manage", course_id=course.id)
+    else:
+        form = AssessmentForm()
+
+    context = {
+        "course": course,
+        "form": form,
+    }
+    return render(request, "assessments/assessment_create.html", context)
+
+
+@role_required(CustomUser.Role.LECTURER)
 def assessment_manage(request, course_id):
     """
     Belirli bir course için assessment listesi + yeni assessment ekleme formu.

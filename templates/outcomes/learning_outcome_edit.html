@@ -1,21 +1,159 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Edit LO: {{ lo.code }} - {{ lo.short_title }}</h2>
+<section class="card" style="margin: 2rem auto; background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); border: none; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);">
+    <div style="text-align: center; margin-bottom: 2rem;">
+        <h2 style="margin: 0; color: #2c3e50; font-size: 2rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+            ✏️ Edit Learning Outcome
+        </h2>
+    </div>
 
-<p>
-    Course: {{ course.code }} - {{ course.name }}
-</p>
+    <div style="background: linear-gradient(135deg, #e8f4fd 0%, #f1f8ff 100%); padding: 1.5rem; border-radius: 12px; border-left: 4px solid #2196F3; margin-bottom: 2rem; box-shadow: 0 2px 8px rgba(33, 150, 243, 0.1);">
+        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+            <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.5rem; box-shadow: 0 3px 12px rgba(33, 150, 243, 0.3);">
+                🎯
+            </div>
+            <div>
+                <h3 style="margin: 0; color: #1976d2; font-size: 1.3rem; font-weight: 700;">Current Learning Outcome</h3>
+                <div style="color: #666; font-size: 0.9rem; margin-top: 0.25rem;">You are editing this learning outcome</div>
+            </div>
+        </div>
+        <div style="background: white; padding: 1.25rem; border-radius: 8px; border: 1px solid #e3f2fd;">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem;">
+                <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1rem; box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);">
+                    {{ lo.code }}
+                </div>
+                <div>
+                    <div style="font-weight: 700; color: #2c3e50; font-size: 1.2rem; margin-bottom: 0.25rem;">{{ lo.short_title }}</div>
+                    <div style="display: flex; gap: 0.75rem; align-items: center;">
+                        <span style="background: #e3f2fd; color: #1976d2; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">Order: {{ lo.order }}</span>
+                        <span style="{% if lo.active %}background: #e8f5e9; color: #2e7d32;{% else %}background: #ffebee; color: #c62828;{% endif %} padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">
+                            {% if lo.active %}Active{% else %}Inactive{% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div style="border-top: 1px solid #e3f2fd; padding-top: 1rem; margin-top: 1rem;">
+                <div style="color: #666; font-size: 0.9rem; margin-bottom: 0.5rem;">
+                    <strong>Course:</strong> {{ course.code }} - {{ course.name }}
+                </div>
+                <div style="color: #666; font-size: 0.9rem;">
+                    <strong>Program:</strong> {{ course.program.name }}
+                </div>
+            </div>
+        </div>
+    </div>
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save</button>
-</form>
+    <form method="post" style="background: #f8f9fa; padding: 2rem; border-radius: 12px; border: 1px solid #e8e8e8;">
+        {% csrf_token %}
 
-<p>
-    <a href="{% url 'outcomes:learning_outcome_manage' course.id %}">
-        Back to LO List
-    </a>
-</p>
+        {% if form.non_field_errors %}
+            <div style="background: #ffebee; color: #c62828; padding: 1rem; border-radius: 8px; border-left: 4px solid #f44336; margin-bottom: 1.5rem;">
+                {% for error in form.non_field_errors %}
+                    <div style="margin-bottom: 0.5rem;">{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
+            <!-- Code Field -->
+            <div class="form-field">
+                <label for="{{ form.code.id_for_label }}" style="display: block; font-weight: 600; color: #2c3e50; margin-bottom: 0.5rem;">
+                    {{ form.code.label }} <span style="color: #f44336;">*</span>
+                </label>
+                {{ form.code }}
+                {% if form.code.errors %}
+                    <div style="color: #f44336; font-size: 0.85rem; margin-top: 0.25rem;">
+                        {% for error in form.code.errors %}{{ error }}{% endfor %}
+                    </div>
+                {% endif %}
+                {% if form.code.help_text %}
+                    <div style="color: #666; font-size: 0.8rem; margin-top: 0.25rem;">{{ form.code.help_text }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Order Field -->
+            <div class="form-field">
+                <label for="{{ form.order.id_for_label }}" style="display: block; font-weight: 600; color: #2c3e50; margin-bottom: 0.5rem;">
+                    {{ form.order.label }} <span style="color: #f44336;">*</span>
+                </label>
+                {{ form.order }}
+                {% if form.order.errors %}
+                    <div style="color: #f44336; font-size: 0.85rem; margin-top: 0.25rem;">
+                        {% for error in form.order.errors %}{{ error }}{% endfor %}
+                    </div>
+                {% endif %}
+                {% if form.order.help_text %}
+                    <div style="color: #666; font-size: 0.8rem; margin-top: 0.25rem;">{{ form.order.help_text }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Short Title Field -->
+        <div class="form-field" style="margin-bottom: 1.5rem;">
+            <label for="{{ form.short_title.id_for_label }}" style="display: block; font-weight: 600; color: #2c3e50; margin-bottom: 0.5rem;">
+                {{ form.short_title.label }} <span style="color: #f44336;">*</span>
+            </label>
+            {{ form.short_title }}
+            {% if form.short_title.errors %}
+                <div style="color: #f44336; font-size: 0.85rem; margin-top: 0.25rem;">
+                    {% for error in form.short_title.errors %}{{ error }}{% endfor %}
+                </div>
+            {% endif %}
+            {% if form.short_title.help_text %}
+                <div style="color: #666; font-size: 0.8rem; margin-top: 0.25rem;">{{ form.short_title.help_text }}</div>
+            {% endif %}
+        </div>
+
+        <!-- Description Field -->
+        <div class="form-field" style="margin-bottom: 1.5rem;">
+            <label for="{{ form.description.id_for_label }}" style="display: block; font-weight: 600; color: #2c3e50; margin-bottom: 0.5rem;">
+                {{ form.description.label }}
+            </label>
+            {{ form.description }}
+            {% if form.description.errors %}
+                <div style="color: #f44336; font-size: 0.85rem; margin-top: 0.25rem;">
+                    {% for error in form.description.errors %}{{ error }}{% endfor %}
+                </div>
+            {% endif %}
+            {% if form.description.help_text %}
+                <div style="color: #666; font-size: 0.8rem; margin-top: 0.25rem;">{{ form.description.help_text }}</div>
+            {% endif %}
+        </div>
+
+        <!-- Active Field -->
+        <div class="form-field" style="margin-bottom: 2rem;">
+            <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: 600; color: #2c3e50; cursor: pointer;">
+                {{ form.active }}
+                {{ form.active.label }}
+            </label>
+            {% if form.active.errors %}
+                <div style="color: #f44336; font-size: 0.85rem; margin-top: 0.25rem;">
+                    {% for error in form.active.errors %}{{ error }}{% endfor %}
+                </div>
+            {% endif %}
+            {% if form.active.help_text %}
+                <div style="color: #666; font-size: 0.8rem; margin-top: 0.25rem;">{{ form.active.help_text }}</div>
+            {% endif %}
+        </div>
+
+        <div style="text-align: center;">
+            <button type="submit"
+                    style="background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%); color: white; padding: 0.875rem 2.5rem; border: none; border-radius: 8px; font-weight: 600; font-size: 1.1rem; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);"
+                    onmouseover="this.style.background='linear-gradient(135deg, #EF6C00 0%, #E65100 100%)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(255, 152, 0, 0.4)';"
+                    onmouseout="this.style.background='linear-gradient(135deg, #FF9800 0%, #F57C00 100%)'; this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(255, 152, 0, 0.3)';">
+                ✏️ Update Learning Outcome
+            </button>
+        </div>
+    </form>
+
+    <div style="text-align: center; margin-top: 2rem;">
+        <a href="{% url 'outcomes:learning_outcome_manage' course.id %}"
+           style="display: inline-flex; align-items: center; gap: 0.5rem; background: #6c757d; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(108, 117, 125, 0.3);"
+           onmouseover="this.style.background='#5a6268'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(108, 117, 125, 0.4)';"
+           onmouseout="this.style.background='#6c757d'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(108, 117, 125, 0.3)';">
+            ← Back to Learning Outcomes
+        </a>
+    </div>
+</section>
 {% endblock %}

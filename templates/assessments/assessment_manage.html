@@ -1,50 +1,155 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Assessments for {{ course.code }} - {{ course.name }}</h2>
-<p>
-    Program: {{ course.program.code }} - {{ course.program.name }}<br>
-    Semester: {{ course.get_semester_display }}
-</p>
+<section class="card" style="margin: 2rem auto; background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); border: none; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);">
+    <h2 style="text-align: center; color: #2c3e50; font-size: 2rem; margin-bottom: 2rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+        📝 Assessment Management
+    </h2>
 
-<h3>Existing Assessments</h3>
-{% if assessments %}
-    <table border="1" cellpadding="4">
-        <tr>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Weight in Course (%)</th>
-            <th>Max Score</th>
-            <th>Date</th>
-            <th>Actions</th>
-        </tr>
-        {% for a in assessments %}
-            <tr>
-                <td>{{ a.name }}</td>
-                <td>{{ a.get_type_display }}</td>
-                <td>{{ a.weight_in_course }}</td>
-                <td>{{ a.max_score }}</td>
-                <td>{{ a.date|default:"-" }}</td>
-                <td>
-                    <a href="{% url 'assessments:assessment_edit' a.id %}">Edit</a> |
-                    <a href="{% url 'assessments:assessment_lo_mapping' a.id %}">LO Mapping</a> |
-                    <a href="{% url 'assessments:assessment_delete' a.id %}">Delete</a> |
-					<a href="{% url 'assessments:assessment_grade_manage' a.id %}">Enter Grades</a> |
-                </td>
-            </tr>
-        {% endfor %}
-    </table>
-{% else %}
-    <p><em>No assessments yet.</em></p>
-{% endif %}
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; margin-bottom: 2rem;">
+        <div style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); padding: 1rem; border-radius: 12px; border-left: 4px solid #667eea; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                <div style="width: 32px; height: 32px; background: #667eea; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.9rem;">
+                    🏛️
+                </div>
+                <div>
+                    <div style="font-size: 0.75rem; color: #666; font-weight: 600; line-height: 1.2;">Program</div>
+                    <div style="font-weight: 700; color: #2c3e50; font-size: 0.85rem; line-height: 1.2;">{{ course.program.code }} – {{ course.program.name }}</div>
+                </div>
+            </div>
+        </div>
 
-<hr>
+        <div style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); padding: 1rem; border-radius: 12px; border-left: 4px solid #2196F3; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                <div style="width: 32px; height: 32px; background: #2196F3; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.9rem;">
+                    📚
+                </div>
+                <div>
+                    <div style="font-size: 0.75rem; color: #666; font-weight: 600; line-height: 1.2;">Course</div>
+                    <div style="font-weight: 700; color: #2c3e50; font-size: 0.85rem; line-height: 1.2;">{{ course.code }} – {{ course.name }}</div>
+                </div>
+            </div>
+        </div>
 
-<h3>Add New Assessment</h3>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Add Assessment</button>
-</form>
+        <div style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); padding: 1rem; border-radius: 12px; border-left: 4px solid #4CAF50; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                <div style="width: 32px; height: 32px; background: #4CAF50; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.9rem;">
+                    📊
+                </div>
+                <div>
+                    <div style="font-size: 0.75rem; color: #666; font-weight: 600; line-height: 1.2;">Total Assessments</div>
+                    <div style="font-weight: 700; color: #2c3e50; font-size: 1.2rem; line-height: 1.2;">{{ assessments|length }}</div>
+                </div>
+            </div>
+        </div>
 
+        <div style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); padding: 1rem; border-radius: 12px; border-left: 4px solid #ff9800; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                <div style="width: 32px; height: 32px; background: #ff9800; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.9rem;">
+                    📅
+                </div>
+                <div>
+                    <div style="font-size: 0.75rem; color: #666; font-weight: 600; line-height: 1.2;">Semester</div>
+                    <div style="font-weight: 700; color: #2c3e50; font-size: 0.85rem; line-height: 1.2;">{{ course.get_semester_display }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="card">
+    <h3 class="section-title" style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
+        📋 Existing Assessments
+        {% if assessments %}
+            <span style="background: #4CAF50; color: white; padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.8rem; font-weight: 600;">
+                {{ assessments|length }}
+            </span>
+        {% endif %}
+    </h3>
+
+    {% if assessments %}
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+                <thead>
+                    <tr style="background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); color: white;">
+                        <th style="padding: 1rem; text-align: left; font-weight: 600; border-bottom: 1px solid #ddd;">Assessment Name</th>
+                        <th style="padding: 1rem; text-align: left; font-weight: 600; border-bottom: 1px solid #ddd;">Type</th>
+                        <th style="padding: 1rem; text-align: center; font-weight: 600; border-bottom: 1px solid #ddd;">Weight (%)</th>
+                        <th style="padding: 1rem; text-align: center; font-weight: 600; border-bottom: 1px solid #ddd;">Max Score</th>
+                        <th style="padding: 1rem; text-align: center; font-weight: 600; border-bottom: 1px solid #ddd;">Date</th>
+                        <th style="padding: 1rem; text-align: center; font-weight: 600; border-bottom: 1px solid #ddd;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for a in assessments %}
+                        <tr style="border-bottom: 1px solid #f0f0f0; {% if forloop.counter|divisibleby:2 %}background: #f8f9fa;{% endif %} transition: all 0.3s ease;"
+                            onmouseover="this.style.background='#e8f5e9';"
+                            onmouseout="this.style.background='{% if forloop.counter|divisibleby:2 %}#f8f9fa{% else %}white{% endif %}';">
+                            <td style="padding: 1rem; font-weight: 600; color: #2c3e50;">{{ a.name }}</td>
+                            <td style="padding: 1rem;">
+                                <span style="background: #e3f2fd; color: #1976d2; padding: 0.25rem 0.6rem; border-radius: 4px; font-size: 0.85rem; font-weight: 600;">
+                                    {{ a.get_type_display }}
+                                </span>
+                            </td>
+                            <td style="padding: 1rem; text-align: center; font-weight: 600;">{{ a.weight_in_course }}%</td>
+                            <td style="padding: 1rem; text-align: center;">{{ a.max_score }}</td>
+                            <td style="padding: 1rem; text-align: center; color: #666;">{{ a.date|default:"-" }}</td>
+                            <td style="padding: 1rem; text-align: center;">
+                                <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
+                                    <a href="{% url 'assessments:assessment_edit' a.id %}"
+                                       style="background: #2196F3; color: white; padding: 0.4rem 0.8rem; border-radius: 4px; text-decoration: none; font-weight: 600; font-size: 0.8rem; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(33, 150, 243, 0.3);"
+                                       onmouseover="this.style.background='#1976D2'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(33, 150, 243, 0.4)';"
+                                       onmouseout="this.style.background='#2196F3'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(33, 150, 243, 0.3)';">
+                                        ✏️ Edit
+                                    </a>
+                                    <a href="{% url 'assessments:assessment_lo_mapping' a.id %}"
+                                       style="background: #FF9800; color: white; padding: 0.4rem 0.8rem; border-radius: 4px; text-decoration: none; font-weight: 600; font-size: 0.8rem; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(255, 152, 0, 0.3);"
+                                       onmouseover="this.style.background='#F57C00'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(255, 152, 0, 0.4)';"
+                                       onmouseout="this.style.background='#FF9800'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(255, 152, 0, 0.3)';">
+                                        🎯 LO Mapping
+                                    </a>
+                                    <a href="{% url 'assessments:assessment_grade_manage' a.id %}"
+                                       style="background: #4CAF50; color: white; padding: 0.4rem 0.8rem; border-radius: 4px; text-decoration: none; font-weight: 600; font-size: 0.8rem; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(76, 175, 80, 0.3);"
+                                       onmouseover="this.style.background='#388E3C'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(76, 175, 80, 0.4)';"
+                                       onmouseout="this.style.background='#4CAF50'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(76, 175, 80, 0.3)';">
+                                        📊 Grades
+                                    </a>
+                                    <a href="{% url 'assessments:assessment_delete' a.id %}"
+                                       style="background: #F44336; color: white; padding: 0.4rem 0.8rem; border-radius: 4px; text-decoration: none; font-weight: 600; font-size: 0.8rem; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(244, 67, 54, 0.3);"
+                                       onmouseover="this.style.background='#D32F2F'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(244, 67, 54, 0.4)';"
+                                       onmouseout="this.style.background='#F44336'; this.style.transform='translateY(0)'; this.style.box-shadow='0 2px 4px rgba(244, 67, 54, 0.3)';">
+                                        🗑️ Delete
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div style="text-align: center; padding: 4rem 2rem; background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); border-radius: 16px; border: 2px dashed #ddd;">
+            <div style="font-size: 4rem; margin-bottom: 1.5rem;">📝</div>
+            <h4 style="margin: 0 0 0.5rem 0; color: #2c3e50; font-size: 1.3rem;">No Assessments Yet</h4>
+            <p style="color: #666; font-size: 1rem; margin: 0; max-width: 400px; margin: 0 auto;">
+                Start by creating your first assessment for this course.
+            </p>
+        </div>
+    {% endif %}
+</section>
+
+<div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem; flex-wrap: wrap;">
+    <a href="{% url 'assessments:assessment_create' course.id %}"
+       style="background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3); display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none;"
+       onmouseover="this.style.background='linear-gradient(135deg, #388e3c 0%, #2e7d32 100%)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(76, 175, 80, 0.4)';"
+       onmouseout="this.style.background='linear-gradient(135deg, #4CAF50 0%, #45a049 100%)'; this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(76, 175, 80, 0.3)';">
+        ✚ Add New Assessment
+    </a>
+    <a href="{% url 'courses:lecturer_dashboard' %}"
+       style="background: #6c757d; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3); display: inline-flex; align-items: center; gap: 0.5rem;"
+       onmouseover="this.style.background='#5a6268'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(108, 117, 125, 0.4)';"
+       onmouseout="this.style.background='#6c757d'; this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(108, 117, 125, 0.3)';">
+        ← Back to Lecturer Panel
+    </a>
+</div>
 {% endblock %}

@@ -1,21 +1,233 @@
 {% extends "base.html" %}
 
 {% block content %}
-{% if course %}
-    <h2>Edit Course: {{ course.code }} - {{ course.name }}</h2>
-{% else %}
-    <h2>Add New Course</h2>
-{% endif %}
+<section class="card" style="margin: 2rem auto; background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); border: none; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);">
+    <div style="text-align: center; margin-bottom: 2rem;">
+        <h2 style="margin: 0; color: #2c3e50; font-size: 2rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+            {% if course %}
+                <span style="color: white; font-size: 1.5rem; font-weight: bold;">✏️</span> Edit Course
+            {% else %}
+                <span style="color: white; font-size: 1.5rem; font-weight: bold;">+</span> Create New Course
+            {% endif %}
+        </h2>
+    </div>
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save</button>
-</form>
+    <div style="background: linear-gradient(135deg, #e8f4fd 0%, #f1f8ff 100%); padding: 1.5rem; border-radius: 12px; border-left: 4px solid #2196F3; margin-bottom: 2rem; box-shadow: 0 2px 8px rgba(33, 150, 243, 0.1);">
+        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+            <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.5rem; box-shadow: 0 3px 12px rgba(102, 126, 234, 0.3);">
+                📚
+            </div>
+            <div>
+                <h3 style="margin: 0; color: #1976d2; font-size: 1.3rem; font-weight: 700;">Course Management</h3>
+                <div style="color: #666; font-size: 0.9rem; margin-top: 0.25rem;">
+                    {% if course %}
+                        Editing course: {{ course.code }} - {{ course.name }}
+                    {% else %}
+                        You are creating a new course
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% if course %}
+        <div style="background: white; padding: 1.25rem; border-radius: 8px; border: 1px solid #e3f2fd;">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem;">
+                <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1rem; box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);">
+                    {{ course.code }}
+                </div>
+                <div>
+                    <div style="font-weight: 700; color: #2c3e50; font-size: 1.2rem; margin-bottom: 0.25rem;">{{ course.name }}</div>
+                    <div style="display: flex; gap: 0.75rem; align-items: center;">
+                        <span style="background: #e3f2fd; color: #1976d2; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">{{ course.program.code }}</span>
+                        <span style="background: #f3e5f5; color: #7b1fa2; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">{{ course.students.count }} Students</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
 
-<p>
-    <a href="{% url 'courses:course_list' %}">
-        Back to Course List
-    </a>
-</p>
+    <form method="post" style="background: #f8f9fa; padding: 2rem; border-radius: 12px; border: 1px solid #e8e8e8;">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div style="background: #ffebee; color: #c62828; padding: 1rem; border-radius: 8px; border-left: 4px solid #f44336; margin-bottom: 1.5rem;">
+                {% for error in form.non_field_errors %}
+                    <div style="margin-bottom: 0.5rem;">{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
+            <!-- Program Field -->
+            <div class="form-field">
+                <label for="{{ form.program.id_for_label }}" style="display: block; font-weight: 600; color: #2c3e50; margin-bottom: 0.5rem;">
+                    {{ form.program.label }} <span style="color: #f44336;">*</span>
+                </label>
+                {{ form.program }}
+                {% if form.program.errors %}
+                    <div style="color: #f44336; font-size: 0.85rem; margin-top: 0.25rem;">
+                        {% for error in form.program.errors %}{{ error }}{% endfor %}
+                    </div>
+                {% endif %}
+                {% if form.program.help_text %}
+                    <div style="color: #666; font-size: 0.8rem; margin-top: 0.25rem;">{{ form.program.help_text }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Code Field -->
+            <div class="form-field">
+                <label for="{{ form.code.id_for_label }}" style="display: block; font-weight: 600; color: #2c3e50; margin-bottom: 0.5rem;">
+                    {{ form.code.label }} <span style="color: #f44336;">*</span>
+                </label>
+                {{ form.code }}
+                {% if form.code.errors %}
+                    <div style="color: #f44336; font-size: 0.85rem; margin-top: 0.25rem;">
+                        {% for error in form.code.errors %}{{ error }}{% endfor %}
+                    </div>
+                {% endif %}
+                {% if form.code.help_text %}
+                    <div style="color: #666; font-size: 0.8rem; margin-top: 0.25rem;">{{ form.code.help_text }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Name Field -->
+        <div class="form-field" style="margin-bottom: 1.5rem;">
+            <label for="{{ form.name.id_for_label }}" style="display: block; font-weight: 600; color: #2c3e50; margin-bottom: 0.5rem;">
+                {{ form.name.label }} <span style="color: #f44336;">*</span>
+            </label>
+            {{ form.name }}
+            {% if form.name.errors %}
+                <div style="color: #f44336; font-size: 0.85rem; margin-top: 0.25rem;">
+                    {% for error in form.name.errors %}{{ error }}{% endfor %}
+                </div>
+            {% endif %}
+            {% if form.name.help_text %}
+                <div style="color: #666; font-size: 0.8rem; margin-top: 0.25rem;">{{ form.name.help_text }}</div>
+            {% endif %}
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
+            <!-- Year Field -->
+            <div class="form-field">
+                <label for="{{ form.year.id_for_label }}" style="display: block; font-weight: 600; color: #2c3e50; margin-bottom: 0.5rem;">
+                    {{ form.year.label }}
+                </label>
+                {{ form.year }}
+                {% if form.year.errors %}
+                    <div style="color: #f44336; font-size: 0.85rem; margin-top: 0.25rem;">
+                        {% for error in form.year.errors %}{{ error }}{% endfor %}
+                    </div>
+                {% endif %}
+                {% if form.year.help_text %}
+                    <div style="color: #666; font-size: 0.8rem; margin-top: 0.25rem;">{{ form.year.help_text }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Semester Field -->
+            <div class="form-field">
+                <label for="{{ form.semester.id_for_label }}" style="display: block; font-weight: 600; color: #2c3e50; margin-bottom: 0.5rem;">
+                    {{ form.semester.label }}
+                </label>
+                {{ form.semester }}
+                {% if form.semester.errors %}
+                    <div style="color: #f44336; font-size: 0.85rem; margin-top: 0.25rem;">
+                        {% for error in form.semester.errors %}{{ error }}{% endfor %}
+                    </div>
+                {% endif %}
+                {% if form.semester.help_text %}
+                    <div style="color: #666; font-size: 0.8rem; margin-top: 0.25rem;">{{ form.semester.help_text }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
+            <!-- ECTS Field -->
+            <div class="form-field">
+                <label for="{{ form.ects.id_for_label }}" style="display: block; font-weight: 600; color: #2c3e50; margin-bottom: 0.5rem;">
+                    {{ form.ects.label }}
+                </label>
+                {{ form.ects }}
+                {% if form.ects.errors %}
+                    <div style="color: #f44336; font-size: 0.85rem; margin-top: 0.25rem;">
+                        {% for error in form.ects.errors %}{{ error }}{% endfor %}
+                    </div>
+                {% endif %}
+                {% if form.ects.help_text %}
+                    <div style="color: #666; font-size: 0.8rem; margin-top: 0.25rem;">{{ form.ects.help_text }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Credit Field -->
+            <div class="form-field">
+                <label for="{{ form.credit.id_for_label }}" style="display: block; font-weight: 600; color: #2c3e50; margin-bottom: 0.5rem;">
+                    {{ form.credit.label }}
+                </label>
+                {{ form.credit }}
+                {% if form.credit.errors %}
+                    <div style="color: #f44336; font-size: 0.85rem; margin-top: 0.25rem;">
+                        {% for error in form.credit.errors %}{{ error }}{% endfor %}
+                    </div>
+                {% endif %}
+                {% if form.credit.help_text %}
+                    <div style="color: #666; font-size: 0.8rem; margin-top: 0.25rem;">{{ form.credit.help_text }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Lecturer Field -->
+        <div class="form-field" style="margin-bottom: 1.5rem;">
+            <label for="{{ form.lecturer.id_for_label }}" style="display: block; font-weight: 600; color: #2c3e50; margin-bottom: 0.5rem;">
+                {{ form.lecturer.label }}
+            </label>
+            {{ form.lecturer }}
+            {% if form.lecturer.errors %}
+                <div style="color: #f44336; font-size: 0.85rem; margin-top: 0.25rem;">
+                    {% for error in form.lecturer.errors %}{{ error }}{% endfor %}
+                </div>
+            {% endif %}
+            {% if form.lecturer.help_text %}
+                <div style="color: #666; font-size: 0.8rem; margin-top: 0.25rem;">{{ form.lecturer.help_text }}</div>
+            {% endif %}
+        </div>
+
+        <!-- Description Field -->
+        <div class="form-field" style="margin-bottom: 1.5rem;">
+            <label for="{{ form.description.id_for_label }}" style="display: block; font-weight: 600; color: #2c3e50; margin-bottom: 0.5rem;">
+                {{ form.description.label }}
+            </label>
+            {{ form.description }}
+            {% if form.description.errors %}
+                <div style="color: #f44336; font-size: 0.85rem; margin-top: 0.25rem;">
+                    {% for error in form.description.errors %}{{ error }}{% endfor %}
+                </div>
+            {% endif %}
+            {% if form.description.help_text %}
+                <div style="color: #666; font-size: 0.8rem; margin-top: 0.25rem;">{{ form.description.help_text }}</div>
+            {% endif %}
+        </div>
+
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <button type="submit"
+                    style="background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); color: white; padding: 0.875rem 2.5rem; border: none; border-radius: 8px; font-weight: 600; font-size: 1.1rem; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);"
+                    onmouseover="this.style.background='linear-gradient(135deg, #388e3c 0%, #2e7d32 100%)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(76, 175, 80, 0.4)';"
+                    onmouseout="this.style.background='linear-gradient(135deg, #4CAF50 0%, #45a049 100%)'; this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(76, 175, 80, 0.3)';">
+                {% if course %}
+                    <span style="color: white; font-size: 1.2rem; font-weight: bold;">✏️</span> Update Course
+                {% else %}
+                    <span style="color: white; font-size: 1.2rem; font-weight: bold;">+</span> Create Course
+                {% endif %}
+            </button>
+        </div>
+
+        <div style="text-align: center;">
+            <a href="{% url 'courses:course_list' %}"
+               style="display: inline-flex; align-items: center; gap: 0.5rem; background: #6c757d; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(108, 117, 125, 0.3);"
+               onmouseover="this.style.background='#5a6268'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(108, 117, 125, 0.4)';"
+               onmouseout="this.style.background='#6c757d'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(108, 117, 125, 0.3)';">
+                ← Back to Course List
+            </a>
+        </div>
+    </form>
+</section>
 {% endblock %}

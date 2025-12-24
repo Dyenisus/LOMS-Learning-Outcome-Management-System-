@@ -1,34 +1,120 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Program Outcomes for {{ program.code }} - {{ program.name }}</h2>
+<section class="card" style="margin: 2rem auto; background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); border: none; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);">
+    <div style="text-align: center; margin-bottom: 2rem;">
+        <h2 style="margin: 0; color: #2c3e50; font-size: 2rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+            🎯 Program Outcomes Management
+        </h2>
+    </div>
 
-<h3>Existing POs</h3>
-<ul>
-    {% for po in outcomes %}
-        <li>
-            <strong>{{ po.code }}</strong> - {{ po.short_title }}
-            (Order: {{ po.order }}, Active: {{ po.active }})
-            |
-            <a href="{% url 'outcomes:program_outcome_edit' po.id %}">Edit</a>
-			|
-            <a href="{% url 'outcomes:program_outcome_delete' po.id %}">Delete</a>
-        </li>
-    {% empty %}
-        <li>No Program Outcomes yet.</li>
-    {% endfor %}
-</ul>
+    <div style="background: linear-gradient(135deg, #e8f4fd 0%, #f1f8ff 100%); padding: 1.5rem; border-radius: 12px; border-left: 4px solid #2196F3; margin-bottom: 2rem; box-shadow: 0 2px 8px rgba(33, 150, 243, 0.1);">
+        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+            <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.5rem; box-shadow: 0 3px 12px rgba(102, 126, 234, 0.3);">
+                🏛️
+            </div>
+            <div>
+                <h3 style="margin: 0; color: #1976d2; font-size: 1.3rem; font-weight: 700;">Program Information</h3>
+                <div style="color: #666; font-size: 0.9rem; margin-top: 0.25rem;">Managing program outcomes for this academic program</div>
+            </div>
+        </div>
+        <div style="background: white; padding: 1.25rem; border-radius: 8px; border: 1px solid #e3f2fd;">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem;">
+                <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1rem; box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);">
+                    {{ program.code }}
+                </div>
+                <div>
+                    <div style="font-weight: 700; color: #2c3e50; font-size: 1.2rem; margin-bottom: 0.25rem;">{{ program.name }}</div>
+                    <div style="display: flex; gap: 0.75rem; align-items: center;">
+                        <span style="background: #e3f2fd; color: #1976d2; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">{{ outcomes|length }} Program Outcomes</span>
+                        <span style="background: #f3e5f5; color: #7b1fa2; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">Faculty Managed</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<hr>
+    {% if outcomes %}
+        <div style="margin-bottom: 2rem;">
+            <h3 style="color: #2c3e50; font-size: 1.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                📋 Existing Program Outcomes
+            </h3>
+            <div style="display: grid; gap: 1rem;">
+                {% for po in outcomes %}
+                    <div style="background: white; border: 1px solid #e0e0e0; border-radius: 12px; padding: 1.5rem; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);"
+                         onmouseover="this.style.borderColor='#667eea'; this.style.boxShadow='0 4px 16px rgba(102, 126, 234, 0.1)';"
+                         onmouseout="this.style.borderColor='#e0e0e0'; this.style.boxShadow='0 2px 8px rgba(0, 0, 0, 0.05)';">
+                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
+                            <div style="flex: 1;">
+                                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                                    <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.9rem;">
+                                        {{ po.code }}
+                                    </div>
+                                    <div>
+                                        <div style="font-weight: 600; color: #2c3e50; font-size: 1rem;">{{ po.short_title }}</div>
+                                        {% if po.description %}
+                                            <div style="color: #666; font-size: 0.85rem; margin-top: 0.25rem;">{{ po.description|truncatechars:100 }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 0.75rem; align-items: center; margin-top: 0.5rem;">
+                                    <span style="background: #f3e5f5; color: #7b1fa2; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">Order: {{ po.order }}</span>
+                                    {% if po.active %}
+                                        <span style="background: #e8f5e9; color: #2e7d32; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">Active</span>
+                                    {% else %}
+                                        <span style="background: #ffebee; color: #c62828; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">Inactive</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <a href="{% url 'outcomes:program_outcome_edit' po.id %}"
+                                   style="background: #FF9800; color: white; padding: 0.5rem 1rem; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(255, 152, 0, 0.3);"
+                                   onmouseover="this.style.background='#F57C00'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 8px rgba(255, 152, 0, 0.4)';"
+                                   onmouseout="this.style.background='#FF9800'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(255, 152, 0, 0.3)';">
+                                    ✏️ Edit
+                                </a>
+                                <a href="{% url 'outcomes:program_outcome_delete' po.id %}"
+                                   style="background: #f44336; color: white; padding: 0.5rem 1rem; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(244, 67, 54, 0.3);"
+                                   onmouseover="this.style.background='#da190b'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 8px rgba(244, 67, 54, 0.4)';"
+                                   onmouseout="this.style.background='#f44336'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(244, 67, 54, 0.3)';">
+                                    🗑️ Delete
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <div style="background: linear-gradient(135deg, #fff3e0 0%, #fff8e1 100%); border: 2px solid #ffcc02; border-radius: 12px; padding: 2rem; text-align: center; border-left: 4px solid #ff9800; margin-bottom: 2rem;">
+            <div style="width: 64px; height: 64px; background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: white; font-size: 1.5rem;">
+                🎯
+            </div>
+            <h3 style="color: #e65100; margin-bottom: 1rem;">No Program Outcomes Yet</h3>
+            <p style="color: #666; margin-bottom: 1.5rem; font-size: 1rem;">
+                Start by creating your first program outcome below.
+            </p>
+        </div>
+    {% endif %}
 
-<h3>Add New Program Outcome</h3>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Add PO</button>
-</form>
+    {% if not show_form %}
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <a href="{% url 'outcomes:program_outcome_create' program.id %}"
+               style="display: inline-flex; align-items: center; gap: 0.5rem; background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); color: white; padding: 0.875rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 1.1rem; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);"
+               onmouseover="this.style.background='linear-gradient(135deg, #388e3c 0%, #2e7d32 100%)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(76, 175, 80, 0.4)';"
+               onmouseout="this.style.background='linear-gradient(135deg, #4CAF50 0%, #45a049 100%)'; this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(76, 175, 80, 0.3)';">
+                <span style="color: white; font-size: 1.2rem; font-weight: bold;">+</span> Add Program Outcome
+            </a>
+        </div>
+    {% endif %}
 
-<p>
-    <a href="{% url 'organizations:faculty_member_dashboard' %}">Back to Faculty Panel</a>
-</p>
+    <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem; flex-wrap: wrap;">
+        <a href="{% url 'organizations:faculty_member_dashboard' %}"
+           style="background: #6c757d; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3); display: inline-flex; align-items: center; gap: 0.5rem;"
+           onmouseover="this.style.background='#5a6268'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(108, 117, 125, 0.4)';"
+           onmouseout="this.style.background='#6c757d'; this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(108, 117, 125, 0.3)';">
+            ← Back to Faculty Panel
+        </a>
+    </div>
+</section>
 {% endblock %}

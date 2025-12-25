@@ -191,22 +191,6 @@
             {% endif %}
         </div>
 
-        <!-- Description Field -->
-        <div class="form-field" style="margin-bottom: 1.5rem;">
-            <label for="{{ form.description.id_for_label }}" style="display: block; font-weight: 600; color: #2c3e50; margin-bottom: 0.5rem;">
-                {{ form.description.label }}
-            </label>
-            {{ form.description }}
-            {% if form.description.errors %}
-                <div style="color: #f44336; font-size: 0.85rem; margin-top: 0.25rem;">
-                    {% for error in form.description.errors %}{{ error }}{% endfor %}
-                </div>
-            {% endif %}
-            {% if form.description.help_text %}
-                <div style="color: #666; font-size: 0.8rem; margin-top: 0.25rem;">{{ form.description.help_text }}</div>
-            {% endif %}
-        </div>
-
         <div style="text-align: center; margin-bottom: 2rem;">
             <button type="submit"
                     style="background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); color: white; padding: 0.875rem 2.5rem; border: none; border-radius: 8px; font-weight: 600; font-size: 1.1rem; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);"

@@ -10,7 +10,6 @@ class CourseForm(forms.ModelForm):
             "program",
             "code",
             "name",
-            "description",
             "year",
             "semester",
             "ects",

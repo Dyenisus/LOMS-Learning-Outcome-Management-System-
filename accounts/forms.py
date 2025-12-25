@@ -26,7 +26,6 @@ class UserCreateForm(forms.ModelForm):
             "student_grade",
             "student_faculty",
             "student_program",
-            "faculty_member_faculty",
             "lecturer_programs",
             "lecturer_courses",
         ]
@@ -45,7 +44,6 @@ class UserCreateForm(forms.ModelForm):
         self.fields["student_grade"].required = False
         self.fields["student_faculty"].required = False
         self.fields["student_program"].required = False
-        self.fields["faculty_member_faculty"].required = False
         self.fields["lecturer_programs"].required = False
         self.fields["lecturer_courses"].required = False
         self.fields["lecturer_programs"].help_text = ""
@@ -58,8 +56,6 @@ class UserCreateForm(forms.ModelForm):
         student_faculty = cleaned.get("student_faculty")
         student_program = cleaned.get("student_program")
         student_grade = cleaned.get("student_grade")
-        faculty_member_faculty = cleaned.get("faculty_member_faculty")
-
         # Şifre kontrolü
         pwd1 = cleaned.get("password1")
         pwd2 = cleaned.get("password2")
@@ -74,10 +70,6 @@ class UserCreateForm(forms.ModelForm):
                 self.add_error("student_program", "Program is required for students.")
             if not student_grade:
                 self.add_error("student_grade", "Grade is required for students.")
-
-        elif role == CustomUser.Role.FACULTY_MEMBER:
-            if not faculty_member_faculty:
-                self.add_error("faculty_member_faculty", "Faculty is required for faculty members.")
 
         return cleaned
 

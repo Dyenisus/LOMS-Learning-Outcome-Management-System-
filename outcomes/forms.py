@@ -5,7 +5,7 @@ from .models import ProgramOutcome, LearningOutcome
 class ProgramOutcomeForm(forms.ModelForm):
     class Meta:
         model = ProgramOutcome
-        fields = ["code", "short_title", "description", "order", "active"]
+        fields = ["code", "short_title", "description", "order"]
 
 
 class LearningOutcomeForm(forms.ModelForm):
@@ -16,5 +16,4 @@ class LearningOutcomeForm(forms.ModelForm):
             "short_title",
             "description",
             "order",
-            "active",
         ]

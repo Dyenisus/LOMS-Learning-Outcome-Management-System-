@@ -11,4 +11,4 @@ class FacultyForm(forms.ModelForm):
 class ProgramForm(forms.ModelForm):
     class Meta:
         model = Program
-        fields = ["code", "name", "faculty", "coordinator"]
+        fields = ["code", "name", "faculty"]

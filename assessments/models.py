@@ -38,10 +38,10 @@ class Assessment(models.Model):
     )
 
     def __str__(self):
-        return f"{self.course.code} - {self.name}"
+        return f"{self.course.code} - {self.get_type_display()}"
 
     class Meta:
-        ordering = ["course", "type", "name"]
+        ordering = ["course", "type", "date"]
         unique_together = ("course", "name")
         verbose_name = "Assessment"
         verbose_name_plural = "Assessments"

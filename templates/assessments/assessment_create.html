@@ -51,22 +51,6 @@
         {% endif %}
 
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
-            <!-- Name Field -->
-            <div class="form-field">
-                <label for="{{ form.name.id_for_label }}" style="display: block; font-weight: 600; color: #2c3e50; margin-bottom: 0.5rem;">
-                    {{ form.name.label }} <span style="color: #f44336;">*</span>
-                </label>
-                {{ form.name }}
-                {% if form.name.errors %}
-                    <div style="color: #f44336; font-size: 0.85rem; margin-top: 0.25rem;">
-                        {% for error in form.name.errors %}{{ error }}{% endfor %}
-                    </div>
-                {% endif %}
-                {% if form.name.help_text %}
-                    <div style="color: #666; font-size: 0.8rem; margin-top: 0.25rem;">{{ form.name.help_text }}</div>
-                {% endif %}
-            </div>
-
             <!-- Type Field -->
             <div class="form-field">
                 <label for="{{ form.type.id_for_label }}" style="display: block; font-weight: 600; color: #2c3e50; margin-bottom: 0.5rem;">

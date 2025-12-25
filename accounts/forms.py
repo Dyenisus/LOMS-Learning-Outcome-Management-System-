@@ -64,12 +64,22 @@ class UserCreateForm(forms.ModelForm):
 
         # Role bazlı zorunluluklar
         if role == CustomUser.Role.STUDENT:
+            missing_student_fields = []
             if not student_faculty:
                 self.add_error("student_faculty", "Student faculty is required for students.")
+                missing_student_fields.append("faculty")
             if not student_program:
                 self.add_error("student_program", "Program is required for students.")
+                missing_student_fields.append("program")
             if not student_grade:
                 self.add_error("student_grade", "Grade is required for students.")
+                missing_student_fields.append("grade")
+
+            if missing_student_fields:
+                self.add_error(
+                    None,
+                    "Students must have faculty, program, and grade selected before saving.",
+                )
 
         return cleaned
 

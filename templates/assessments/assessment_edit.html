@@ -21,13 +21,13 @@
         <div style="background: white; padding: 1.25rem; border-radius: 8px; border: 1px solid #ffe0b2;">
             <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem;">
                 <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #ff6f00 0%, #e65100 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1rem; box-shadow: 0 2px 8px rgba(255, 152, 0, 0.3);">
-                    {{ assessment.name|slice:":2"|upper }}
+                    {{ assessment.get_type_display|slice:":2"|upper }}
                 </div>
                 <div>
-                    <div style="font-weight: 700; color: #2c3e50; font-size: 1.2rem; margin-bottom: 0.25rem;">{{ assessment.name }}</div>
+                    <div style="font-weight: 700; color: #2c3e50; font-size: 1.2rem; margin-bottom: 0.25rem;">{{ assessment.get_type_display }}</div>
                     <div style="display: flex; gap: 0.75rem; align-items: center;">
                         <span style="background: #fff3e0; color: #f57c00; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">{{ assessment.get_type_display }}</span>
-                        <span style="background: #e8f5e9; color: #2e7d32; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">{{ assessment.weight }}% weight</span>
+                        <span style="background: #e8f5e9; color: #2e7d32; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">{{ assessment.weight_in_course }}% weight</span>
                         <span style="background: #e3f2fd; color: #1976d2; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">{{ assessment.max_score }} pts</span>
                     </div>
                 </div>
@@ -55,22 +55,6 @@
         {% endif %}
 
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
-            <!-- Name Field -->
-            <div class="form-field">
-                <label for="{{ form.name.id_for_label }}" style="display: block; font-weight: 600; color: #2c3e50; margin-bottom: 0.5rem;">
-                    {{ form.name.label }} <span style="color: #f44336;">*</span>
-                </label>
-                {{ form.name }}
-                {% if form.name.errors %}
-                    <div style="color: #f44336; font-size: 0.85rem; margin-top: 0.25rem;">
-                        {% for error in form.name.errors %}{{ error }}{% endfor %}
-                    </div>
-                {% endif %}
-                {% if form.name.help_text %}
-                    <div style="color: #666; font-size: 0.8rem; margin-top: 0.25rem;">{{ form.name.help_text }}</div>
-                {% endif %}
-            </div>
-
             <!-- Type Field -->
             <div class="form-field">
                 <label for="{{ form.type.id_for_label }}" style="display: block; font-weight: 600; color: #2c3e50; margin-bottom: 0.5rem;">
@@ -120,6 +104,22 @@
                     <div style="color: #666; font-size: 0.8rem; margin-top: 0.25rem;">{{ form.max_score.help_text }}</div>
                 {% endif %}
             </div>
+        </div>
+
+        <!-- Date Field -->
+        <div class="form-field" style="margin-bottom: 2rem;">
+            <label for="{{ form.date.id_for_label }}" style="display: block; font-weight: 600; color: #2c3e50; margin-bottom: 0.5rem;">
+                {{ form.date.label }}
+            </label>
+            {{ form.date }}
+            {% if form.date.errors %}
+                <div style="color: #f44336; font-size: 0.85rem; margin-top: 0.25rem;">
+                    {% for error in form.date.errors %}{{ error }}{% endfor %}
+                </div>
+            {% endif %}
+            {% if form.date.help_text %}
+                <div style="color: #666; font-size: 0.8rem; margin-top: 0.25rem;">{{ form.date.help_text }}</div>
+            {% endif %}
         </div>
 
         <div style="text-align: center;">

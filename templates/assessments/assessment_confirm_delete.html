@@ -18,7 +18,7 @@
 
             <div style="background: linear-gradient(135deg, #fff5f5 0%, #ffebee 100%); border: 2px solid #ffcdd2; border-radius: 10px; padding: 1.5rem; margin-bottom: 1.5rem;">
                 <div style="font-weight: 700; color: #d32f2f; font-size: 1.2rem; margin-bottom: 0.5rem;">
-                    {{ assessment.name }}
+                    {{ assessment.get_type_display }}
                 </div>
                 <div style="font-weight: 600; color: #666; font-size: 1rem; margin-bottom: 0.5rem;">
                     Type: {{ assessment.get_type_display }}

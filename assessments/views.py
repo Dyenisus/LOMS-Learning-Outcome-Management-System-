@@ -2,7 +2,7 @@ from decimal import Decimal, InvalidOperation
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.exceptions import PermissionDenied
-from django.forms import modelform_factory
+from django.contrib import messages
 
 from accounts.decorators import role_required
 from accounts.models import CustomUser
@@ -13,6 +13,7 @@ from .models import (
     AssessmentLearningOutcome,
     StudentAssessmentResult,
 )
+from .forms import AssessmentForm
 
 
 def _check_course_permission_for_lecturer(user: CustomUser, course: Course):
@@ -45,16 +46,12 @@ def assessment_create(request, course_id):
     )
     _check_course_permission_for_lecturer(request.user, course)
 
-    AssessmentForm = modelform_factory(
-        Assessment,
-        fields=["name", "type", "weight_in_course", "max_score", "date"],
-    )
-
     if request.method == "POST":
         form = AssessmentForm(request.POST)
         if form.is_valid():
             assessment = form.save(commit=False)
             assessment.course = course
+            assessment.name = form.build_name(course, assessment)
             assessment.save()
             return redirect("assessments:assessment_manage", course_id=course.id)
     else:
@@ -78,18 +75,14 @@ def assessment_manage(request, course_id):
     )
     _check_course_permission_for_lecturer(request.user, course)
 
-    assessments = course.assessments.all().order_by("date", "name")
-
-    AssessmentForm = modelform_factory(
-        Assessment,
-        fields=["name", "type", "weight_in_course", "max_score", "date"],
-    )
+    assessments = course.assessments.all().order_by("date", "type")
 
     if request.method == "POST":
         form = AssessmentForm(request.POST)
         if form.is_valid():
             assessment = form.save(commit=False)
             assessment.course = course
+            assessment.name = form.build_name(course, assessment)
             assessment.save()
             return redirect("assessments:assessment_manage", course_id=course.id)
     else:
@@ -112,15 +105,13 @@ def assessment_edit(request, pk):
     course = assessment.course
     _check_course_permission_for_lecturer(request.user, course)
 
-    AssessmentForm = modelform_factory(
-        Assessment,
-        fields=["name", "type", "weight_in_course", "max_score", "date"],
-    )
-
     if request.method == "POST":
         form = AssessmentForm(request.POST, instance=assessment)
         if form.is_valid():
-            form.save()
+            updated_assessment = form.save(commit=False)
+            updated_assessment.course = course
+            updated_assessment.name = form.build_name(course, updated_assessment)
+            updated_assessment.save()
             return redirect("assessments:assessment_manage", course_id=course.id)
     else:
         form = AssessmentForm(instance=assessment)
@@ -285,6 +276,7 @@ def assessment_grade_manage(request, pk):
                 },
             )
 
+        messages.success(request, "Grades saved for this assessment.")
         return redirect("assessments:assessment_grade_manage", pk=assessment.id)
 
     # GET: tablo için satırları hazırla

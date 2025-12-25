@@ -72,7 +72,6 @@
             <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
                 <thead>
                     <tr style="background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); color: white;">
-                        <th style="padding: 1rem; text-align: left; font-weight: 600; border-bottom: 1px solid #ddd;">Assessment Name</th>
                         <th style="padding: 1rem; text-align: left; font-weight: 600; border-bottom: 1px solid #ddd;">Type</th>
                         <th style="padding: 1rem; text-align: center; font-weight: 600; border-bottom: 1px solid #ddd;">Weight (%)</th>
                         <th style="padding: 1rem; text-align: center; font-weight: 600; border-bottom: 1px solid #ddd;">Max Score</th>
@@ -85,7 +84,6 @@
                         <tr style="border-bottom: 1px solid #f0f0f0; {% if forloop.counter|divisibleby:2 %}background: #f8f9fa;{% endif %} transition: all 0.3s ease;"
                             onmouseover="this.style.background='#e8f5e9';"
                             onmouseout="this.style.background='{% if forloop.counter|divisibleby:2 %}#f8f9fa{% else %}white{% endif %}';">
-                            <td style="padding: 1rem; font-weight: 600; color: #2c3e50;">{{ a.name }}</td>
                             <td style="padding: 1rem;">
                                 <span style="background: #e3f2fd; color: #1976d2; padding: 0.25rem 0.6rem; border-radius: 4px; font-size: 0.85rem; font-weight: 600;">
                                     {{ a.get_type_display }}
@@ -93,7 +91,7 @@
                             </td>
                             <td style="padding: 1rem; text-align: center; font-weight: 600;">{{ a.weight_in_course }}%</td>
                             <td style="padding: 1rem; text-align: center;">{{ a.max_score }}</td>
-                            <td style="padding: 1rem; text-align: center; color: #666;">{{ a.date|default:"-" }}</td>
+                            <td style="padding: 1rem; text-align: center; color: #666;">{{ a.date|date:"Y-m-d"|default:"-" }}</td>
                             <td style="padding: 1rem; text-align: center;">
                                 <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
                                     <a href="{% url 'assessments:assessment_edit' a.id %}"

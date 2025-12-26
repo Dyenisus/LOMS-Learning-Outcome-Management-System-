@@ -79,10 +79,10 @@
                                 {{ lo.code }}
                             </div>
                             <div>
-                                <div style="font-weight: 600; color: #2c3e50; font-size: 1.1rem; margin-bottom: 0.25rem;">{{ lo.short_title }}</div>
-                                <div style="display: flex; gap: 0.75rem; align-items: center;">
-                                    <span style="background: #e3f2fd; color: #1976d2; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">Order: {{ lo.order }}</span>
-                                </div>
+                                <div style="font-weight: 600; color: #2c3e50; font-size: 1.1rem; margin-bottom: 0.25rem;">{{ lo.code }}</div>
+                                {% if lo.description %}
+                                    <div style="color: #666; font-size: 0.9rem; margin-top: 0.25rem;">{{ lo.description|truncatechars:120 }}</div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>

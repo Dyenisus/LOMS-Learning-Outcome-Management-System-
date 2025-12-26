@@ -15,7 +15,7 @@
             <strong style="color: #1976d2; font-size: 1.1rem;">Learning Outcome Information</strong>
         </div>
         <p style="margin: 0; color: #2c3e50; font-weight: 600; font-size: 1.1rem;">
-            {{ lo.code }} - {{ lo.short_title }}
+            {{ lo.code }}
         </p>
         <p style="margin: 0.5rem 0 0 0; color: #666; font-size: 0.95rem;">
             Course: {{ course.code }} - {{ course.name }} | Program: {{ course.program.name }}
@@ -48,7 +48,7 @@
                                         {{ row.po.code }}
                                     </div>
                                     <div>
-                                        <div style="font-weight: 600; color: #2c3e50; font-size: 1rem;">{{ row.po.short_title }}</div>
+                                        <div style="font-weight: 600; color: #2c3e50; font-size: 1rem;">{{ row.po.code }}</div>
                                         {% if row.po.description %}
                                             <div style="color: #666; font-size: 0.85rem; margin-top: 0.25rem;">{{ row.po.description|truncatechars:80 }}</div>
                                         {% endif %}

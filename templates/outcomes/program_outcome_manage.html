@@ -46,16 +46,13 @@
                          onmouseout="this.style.borderColor='#e0e0e0'; this.style.boxShadow='0 2px 8px rgba(0, 0, 0, 0.05)';">
                         <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
                             <div style="flex: 1;">
-                                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; flex-wrap: wrap;">
                                     <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.9rem;">
                                         {{ po.code }}
                                     </div>
-                                    <div>
-                                        <div style="font-weight: 600; color: #2c3e50; font-size: 1rem;">{{ po.code }}</div>
-                                        {% if po.description %}
-                                            <div style="color: #666; font-size: 0.85rem; margin-top: 0.25rem;">{{ po.description|truncatechars:100 }}</div>
-                                        {% endif %}
-                                    </div>
+                                    {% if po.description %}
+                                        <div style="color: #000; font-size: 0.95rem; font-weight: bold; line-height: 1.4; flex: 1; min-width: 0; word-break: break-word;">{{ po.description }}</div>
+                                    {% endif %}
                                 </div>
                             </div>
                             <div style="display: flex; gap: 0.5rem;">

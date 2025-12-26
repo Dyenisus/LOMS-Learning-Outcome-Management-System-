@@ -62,6 +62,7 @@
                 {% endif %}
             </div>
 
+            {% if form.order %}
             <!-- Order Field -->
             <div class="form-field">
                 <label for="{{ form.order.id_for_label }}" style="display: block; font-weight: 600; color: #2c3e50; margin-bottom: 0.5rem;">
@@ -77,8 +78,10 @@
                     <div style="color: #666; font-size: 0.8rem; margin-top: 0.25rem;">{{ form.order.help_text }}</div>
                 {% endif %}
             </div>
+            {% endif %}
         </div>
 
+        {% if form.short_title %}
         <!-- Short Title Field -->
         <div class="form-field" style="margin-bottom: 1.5rem;">
             <label for="{{ form.short_title.id_for_label }}" style="display: block; font-weight: 600; color: #2c3e50; margin-bottom: 0.5rem;">
@@ -94,6 +97,7 @@
                 <div style="color: #666; font-size: 0.8rem; margin-top: 0.25rem;">{{ form.short_title.help_text }}</div>
             {% endif %}
         </div>
+        {% endif %}
 
         <!-- Description Field -->
         <div class="form-field" style="margin-bottom: 1.5rem;">

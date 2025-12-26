@@ -23,6 +23,7 @@ class UserCreateForm(forms.ModelForm):
             "email",
             "role",
             "phone",
+            "student_number",
             "student_grade",
             "student_faculty",
             "student_program",
@@ -44,6 +45,7 @@ class UserCreateForm(forms.ModelForm):
         self.fields["student_grade"].required = False
         self.fields["student_faculty"].required = False
         self.fields["student_program"].required = False
+        self.fields["student_number"].required = False
         self.fields["lecturer_programs"].required = False
         self.fields["lecturer_courses"].required = False
         self.fields["lecturer_programs"].help_text = ""
@@ -56,6 +58,7 @@ class UserCreateForm(forms.ModelForm):
         student_faculty = cleaned.get("student_faculty")
         student_program = cleaned.get("student_program")
         student_grade = cleaned.get("student_grade")
+        student_number = cleaned.get("student_number")
         # Şifre kontrolü
         pwd1 = cleaned.get("password1")
         pwd2 = cleaned.get("password2")
@@ -74,11 +77,14 @@ class UserCreateForm(forms.ModelForm):
             if not student_grade:
                 self.add_error("student_grade", "Grade is required for students.")
                 missing_student_fields.append("grade")
+            if not student_number:
+                self.add_error("student_number", "Student number is required for students.")
+                missing_student_fields.append("student number")
 
             if missing_student_fields:
                 self.add_error(
                     None,
-                    "Students must have faculty, program, and grade selected before saving.",
+                    "Students must have faculty, program, grade, and student number before saving.",
                 )
 
         return cleaned

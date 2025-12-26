@@ -40,14 +40,14 @@ def program_outcome_create(request, program_id):
     _check_program_permission(request.user, program)
 
     if request.method == "POST":
-        form = ProgramOutcomeForm(request.POST)
+        form = ProgramOutcomeForm(request.POST, user=request.user)
         if form.is_valid():
             po = form.save(commit=False)
             po.program = program
             po.save()
             return redirect("outcomes:program_outcome_manage", program_id=program.id)
     else:
-        form = ProgramOutcomeForm()
+        form = ProgramOutcomeForm(user=request.user)
 
     context = {
         "program": program,
@@ -63,12 +63,12 @@ def program_outcome_edit(request, pk):
     _check_program_permission(request.user, program)
 
     if request.method == "POST":
-        form = ProgramOutcomeForm(request.POST, instance=po)
+        form = ProgramOutcomeForm(request.POST, instance=po, user=request.user)
         if form.is_valid():
             form.save()
             return redirect("outcomes:program_outcome_manage", program_id=program.id)
     else:
-        form = ProgramOutcomeForm(instance=po)
+        form = ProgramOutcomeForm(instance=po, user=request.user)
 
     context = {
         "program": program,
@@ -126,14 +126,14 @@ def learning_outcome_create(request, course_id):
     _check_course_permission_for_lecturer(request.user, course)
 
     if request.method == "POST":
-        form = LearningOutcomeForm(request.POST)
+        form = LearningOutcomeForm(request.POST, user=request.user)
         if form.is_valid():
             lo = form.save(commit=False)
             lo.course = course
             lo.save()
             return redirect("outcomes:learning_outcome_manage", course_id=course.id)
     else:
-        form = LearningOutcomeForm()
+        form = LearningOutcomeForm(user=request.user)
 
     context = {
         "course": course,
@@ -155,14 +155,14 @@ def learning_outcome_manage(request, course_id):
     ).prefetch_related("program_outcomes")
 
     if request.method == "POST":
-        form = LearningOutcomeForm(request.POST)
+        form = LearningOutcomeForm(request.POST, user=request.user)
         if form.is_valid():
             lo = form.save(commit=False)
             lo.course = course
             lo.save()
             return redirect("outcomes:learning_outcome_manage", course_id=course.id)
     else:
-        form = LearningOutcomeForm()
+        form = LearningOutcomeForm(user=request.user)
 
     context = {
         "course": course,
@@ -182,12 +182,12 @@ def learning_outcome_edit(request, pk):
     _check_course_permission_for_lecturer(request.user, course)
 
     if request.method == "POST":
-        form = LearningOutcomeForm(request.POST, instance=lo)
+        form = LearningOutcomeForm(request.POST, instance=lo, user=request.user)
         if form.is_valid():
             form.save()
             return redirect("outcomes:learning_outcome_manage", course_id=course.id)
     else:
-        form = LearningOutcomeForm(instance=lo)
+        form = LearningOutcomeForm(instance=lo, user=request.user)
 
     context = {
         "course": course,

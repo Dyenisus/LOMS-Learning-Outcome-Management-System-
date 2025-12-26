@@ -96,6 +96,13 @@ class CustomUser(AbstractUser):
         null=True,
     )
 
+    student_number = models.CharField(
+        max_length=32,
+        null=True,
+        blank=True,
+        help_text="Öğrenci numarası",
+    )
+
     objects = CustomUserManager()
 
     def __str__(self):

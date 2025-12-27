@@ -34,8 +34,8 @@ def course_create(request):
     if request.method == "POST":
         form = CourseForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect("courses:course_list")
+            course = form.save()
+            return redirect(f"/courses/?program={course.program.id}")
     else:
         form = CourseForm(initial=initial)
 

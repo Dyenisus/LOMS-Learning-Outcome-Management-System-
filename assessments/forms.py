@@ -29,14 +29,7 @@ class AssessmentForm(forms.ModelForm):
 
         type_field = self.fields.get("type")
         if type_field:
-            filtered_choices = [
-                choice
-                for choice in type_field.choices
-                if choice[0] != Assessment.AssessmentType.OTHER
-            ]
-            if self.instance and self.instance.type not in [c[0] for c in filtered_choices]:
-                filtered_choices.append((self.instance.type, self.instance.get_type_display()))
-            type_field.choices = filtered_choices
+            type_field.choices = Assessment.AssessmentType.choices
 
     def build_name(self, course, instance=None):
         """

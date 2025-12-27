@@ -1,14 +1,22 @@
 from decimal import Decimal
 
-from django.shortcuts import render, redirect, get_object_or_404
-from accounts.decorators import role_required
-from .models import CustomUser
-from courses.models import Course
-from .forms import UserCreateForm
+from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from django.urls import reverse
 from django.core.exceptions import PermissionDenied
+from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
+
+from accounts.decorators import role_required
 from assessments.models import Assessment, StudentAssessmentResult, AssessmentLearningOutcome
+from courses.models import Course
+
+from .forms import (
+    UserCreateForm,
+    StudentBulkUploadForm,
+    CustomPasswordChangeForm,
+)
+from .models import CustomUser
 
 @role_required(CustomUser.Role.STUDENT_AFFAIRS)
 def user_create(request):
@@ -19,13 +27,27 @@ def user_create(request):
     - Faculty Member
     hesaplarını buradan oluşturabilsin.
     """
-    if request.method == "POST":
+    if request.method == "POST" and request.POST.get("action") == "bulk_upload":
+        form = UserCreateForm()
+        bulk_upload_form = StudentBulkUploadForm(request.POST, request.FILES)
+        if bulk_upload_form.is_valid():
+            created_users = bulk_upload_form.save()
+            messages.success(
+                request,
+                f"{len(created_users)} student account(s) created from the uploaded file.",
+            )
+            for warning_message in bulk_upload_form.skip_messages:
+                messages.warning(request, warning_message)
+            return redirect("accounts:user_create")
+    elif request.method == "POST":
         form = UserCreateForm(request.POST)
+        bulk_upload_form = StudentBulkUploadForm()
         if form.is_valid():
             form.save()
             return redirect("accounts:user_create")  # tekrar boş form
     else:
         form = UserCreateForm()
+        bulk_upload_form = StudentBulkUploadForm()
 
     users = (
         CustomUser.objects
@@ -41,6 +63,7 @@ def user_create(request):
     context = {
         "form": form,
         "users": users,
+        "bulk_upload_form": bulk_upload_form,
     }
     return render(request, "accounts/user_create.html", context)
 
@@ -85,6 +108,28 @@ def user_delete(request, pk):
         return redirect("accounts:user_create")
 
     return render(request, "accounts/user_confirm_delete.html", {"user_obj": user_obj})
+
+
+@login_required
+def password_change(request):
+    if request.method == "POST":
+        form = CustomPasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            if getattr(user, "must_change_password", False):
+                user.must_change_password = False
+            user.save()
+            update_session_auth_hash(request, user)
+            messages.success(request, "Password updated successfully.")
+            return redirect("accounts:role_redirect")
+    else:
+        form = CustomPasswordChangeForm(request.user)
+
+    context = {
+        "form": form,
+    }
+    return render(request, "accounts/password_change.html", context)
+
 
 @login_required
 def role_redirect(request):

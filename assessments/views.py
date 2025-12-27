@@ -47,7 +47,7 @@ def assessment_create(request, course_id):
     _check_course_permission_for_lecturer(request.user, course)
 
     if request.method == "POST":
-        form = AssessmentForm(request.POST)
+        form = AssessmentForm(request.POST, course=course)
         if form.is_valid():
             assessment = form.save(commit=False)
             assessment.course = course
@@ -55,7 +55,7 @@ def assessment_create(request, course_id):
             assessment.save()
             return redirect("assessments:assessment_manage", course_id=course.id)
     else:
-        form = AssessmentForm()
+        form = AssessmentForm(course=course)
 
     context = {
         "course": course,
@@ -78,7 +78,7 @@ def assessment_manage(request, course_id):
     assessments = course.assessments.all().order_by("date", "type")
 
     if request.method == "POST":
-        form = AssessmentForm(request.POST)
+        form = AssessmentForm(request.POST, course=course)
         if form.is_valid():
             assessment = form.save(commit=False)
             assessment.course = course
@@ -86,7 +86,7 @@ def assessment_manage(request, course_id):
             assessment.save()
             return redirect("assessments:assessment_manage", course_id=course.id)
     else:
-        form = AssessmentForm()
+        form = AssessmentForm(course=course)
 
     context = {
         "course": course,
@@ -106,7 +106,7 @@ def assessment_edit(request, pk):
     _check_course_permission_for_lecturer(request.user, course)
 
     if request.method == "POST":
-        form = AssessmentForm(request.POST, instance=assessment)
+        form = AssessmentForm(request.POST, instance=assessment, course=course)
         if form.is_valid():
             updated_assessment = form.save(commit=False)
             updated_assessment.course = course
@@ -114,7 +114,7 @@ def assessment_edit(request, pk):
             updated_assessment.save()
             return redirect("assessments:assessment_manage", course_id=course.id)
     else:
-        form = AssessmentForm(instance=assessment)
+        form = AssessmentForm(instance=assessment, course=course)
 
     context = {
         "course": course,

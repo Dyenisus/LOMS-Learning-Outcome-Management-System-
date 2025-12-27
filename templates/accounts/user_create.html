@@ -52,6 +52,51 @@
 </section>
 
 <section class="card" style="margin: 2rem auto; background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); border: none; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);">
+    <h3 style="color: #2c3e50; font-size: 1.5rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+        📥 Bulk Student Upload
+    </h3>
+    <p style="color: #546e7a; margin-bottom: 1.5rem;">
+        Upload an Excel (.xlsx) or CSV file with the following headers: <strong>Student_Number, Username, Faculty, Program, Grade</strong>.
+        Students will be created automatically and their initial password will match the student number.
+    </p>
+
+    <form method="post" enctype="multipart/form-data" style="background: #fdfdfd; padding: 1.5rem; border-radius: 12px; border: 1px solid #e8e8e8;">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="bulk_upload">
+
+        {% if bulk_upload_form.non_field_errors %}
+            <div style="background: #fdecea; color: #b71c1c; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                {% for error in bulk_upload_form.non_field_errors %}
+                    <div>{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;">
+            <label for="{{ bulk_upload_form.file.id_for_label }}" style="font-weight: 600; color: #374151;">Excel or CSV File</label>
+            {{ bulk_upload_form.file }}
+            {% if bulk_upload_form.file.errors %}
+                <div style="color: #b71c1c; font-size: 0.9rem;">
+                    {% for error in bulk_upload_form.file.errors %}{{ error }}{% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <button type="submit"
+                style="background: linear-gradient(135deg, #2196F3 0%, #1976d2 100%); color: white; padding: 0.75rem 1.75rem; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);">
+            Upload & Create Students
+        </button>
+    </form>
+
+    <div style="background: #f8f9fa; border-radius: 12px; padding: 1rem; margin-top: 1rem; font-size: 0.9rem; border: 1px dashed #cfd8dc;">
+        <div style="font-weight: 600; color: #374151; margin-bottom: 0.5rem;">Example</div>
+        <pre style="margin: 0; color: #263238; overflow-x: auto;">Student_Number,Username,Faculty,Program,Grade
+231401007,yekta_soyturk,MDBF,CSE,1
+231401039,arda_ilter,MDBF,CSE,1</pre>
+    </div>
+</section>
+
+<section class="card" style="margin: 2rem auto; background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); border: none; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);">
     <h3 style="color: #2c3e50; font-size: 1.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
         📋 Existing Users
         {% if users %}

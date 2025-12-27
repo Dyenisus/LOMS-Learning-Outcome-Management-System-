@@ -103,6 +103,11 @@ class CustomUser(AbstractUser):
         help_text="Öğrenci numarası",
     )
 
+    must_change_password = models.BooleanField(
+        default=False,
+        help_text="User must update password after logging in with the initial credentials.",
+    )
+
     objects = CustomUserManager()
 
     def __str__(self):

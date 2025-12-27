@@ -36,6 +36,11 @@ urlpatterns = [
         name="role_redirect",
     ),
     path(
+        "password/change/",
+        views.password_change,
+        name="password_change",
+    ),
+    path(
         "student/dashboard/",
         views.student_dashboard,
         name="student_dashboard",

@@ -215,6 +215,11 @@
             border-color: #fecdd3;
             color: #b91c1c;
         }
+        .alert.warning {
+            background: #fff7ed;
+            border-color: #fed7aa;
+            color: #b45309;
+        }
         .form-errors {
             padding: 0.85rem 1rem;
             border: 1px solid #fecdd3;
@@ -278,6 +283,7 @@
             {% if user.is_student %}
                 <a href="{% url 'accounts:student_dashboard' %}">My Courses</a>
             {% endif %}
+            <a href="{% url 'accounts:password_change' %}">Change Password</a>
             <form method="post" action="{% url 'accounts:logout' %}" class="logout-form">
                 {% csrf_token %}
                 <button type="submit" class="btn outline">Logout</button>
@@ -287,6 +293,15 @@
     </nav>
 </header>
 <main>
+    {% if user.is_authenticated and user.must_change_password %}
+        <div class="alert warning" style="margin-bottom: 1rem;">
+            This is your first login with a temporary password. Please
+            <a href="{% url 'accounts:password_change' %}" style="color: inherit; text-decoration: underline;">
+                change your password
+            </a>
+            to continue using the system safely.
+        </div>
+    {% endif %}
     {% if messages %}
         <div class="alerts">
             {% for message in messages %}

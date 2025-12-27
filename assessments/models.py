@@ -11,7 +11,7 @@ class Assessment(models.Model):
         MIDTERM = "MIDTERM", "Midterm"
         FINAL = "FINAL", "Final"
         PROJECT = "PROJECT", "Project"
-        OTHER = "OTHER", "Other"
+        ATTENDANCE = "ATTENDANCE", "Attendance"
 
     course = models.ForeignKey(
         Course,
@@ -22,7 +22,7 @@ class Assessment(models.Model):
     type = models.CharField(
         max_length=20,
         choices=AssessmentType.choices,
-        default=AssessmentType.OTHER,
+        default=AssessmentType.ATTENDANCE,
     )
 
     weight_in_course = models.PositiveSmallIntegerField(

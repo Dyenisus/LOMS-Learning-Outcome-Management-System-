@@ -9,8 +9,13 @@ from .forms import CourseForm
 
 @role_required(CustomUser.Role.STUDENT_AFFAIRS)
 def course_list(request):
+    course_id = request.GET.get("course")
     program_id = request.GET.get("program")
-    if program_id:
+    if course_id:
+        course = get_object_or_404(Course.objects.select_related("program"), id=course_id)
+        courses = Course.objects.filter(id=course.id).select_related("program")
+        program = course.program
+    elif program_id:
         program = get_object_or_404(Program, id=program_id)
         courses = Course.objects.filter(program=program).select_related("program")
     else:
@@ -34,8 +39,8 @@ def course_create(request):
     if request.method == "POST":
         form = CourseForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect("courses:course_list")
+            course = form.save()
+            return redirect(f"/courses/?course={course.id}")
     else:
         form = CourseForm(initial=initial)
 

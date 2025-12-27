@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.shortcuts import render, redirect, get_object_or_404
 from accounts.decorators import role_required
 from .models import CustomUser
@@ -180,6 +182,8 @@ def student_course_detail(request, course_id):
     }
 
     rows = []
+    lo_totals = {}
+    po_totals = {}
     for a in assessments:
         result = results_by_assessment.get(a.id)
 
@@ -191,7 +195,11 @@ def student_course_detail(request, course_id):
             and a.max_score
         ):
             try:
-                contribution = (result.raw_score / a.max_score) * a.weight_in_course
+                contribution = (
+                    Decimal(result.raw_score)
+                    / Decimal(a.max_score)
+                    * Decimal(a.weight_in_course)
+                )
             except ZeroDivisionError:
                 contribution = None
 
@@ -200,12 +208,27 @@ def student_course_detail(request, course_id):
         for mapping in a.lo_mappings.all():
             lo = mapping.learning_outcome
 
+            lo_contrib = None
+            if contribution is not None:
+                lo_contrib = contribution * (
+                    Decimal(mapping.weight_in_assessment) / Decimal(100)
+                )
+                lo_totals[lo.id] = lo_totals.get(lo.id, Decimal(0)) + lo_contrib
+
+                # PO katkılarını güncelle
+                for lo_po in lo.lo_po_mappings.all():
+                    po_contrib = lo_contrib * (Decimal(lo_po.weight) / Decimal(100))
+                    po_totals[lo_po.program_outcome_id] = po_totals.get(
+                        lo_po.program_outcome_id, Decimal(0)
+                    ) + po_contrib
+
             po_rows = []
             for lo_po in lo.lo_po_mappings.all():
                 po_rows.append(
                     {
                         "po": lo_po.program_outcome,
                         "weight": lo_po.weight,
+                        "po_score": po_totals.get(lo_po.program_outcome_id),
                     }
                 )
 
@@ -214,6 +237,7 @@ def student_course_detail(request, course_id):
                     "lo": lo,
                     "weight_in_assessment": mapping.weight_in_assessment,
                     "po_rows": po_rows,
+                    "lo_score": lo_totals.get(lo.id),
                 }
             )
 

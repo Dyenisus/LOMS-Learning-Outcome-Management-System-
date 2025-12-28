@@ -60,6 +60,8 @@ class AssessmentForm(forms.ModelForm):
         weight = self.cleaned_data.get("weight_in_course")
         if weight is None or not self.course:
             return weight
+        if weight <= 0:
+            raise forms.ValidationError("Weight must be greater than 0.")
 
         queryset = Assessment.objects.filter(course=self.course)
         if self.instance.pk:

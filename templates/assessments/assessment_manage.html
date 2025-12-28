@@ -86,7 +86,7 @@
                             onmouseout="this.style.background='{% if forloop.counter|divisibleby:2 %}#f8f9fa{% else %}white{% endif %}';">
                             <td style="padding: 1rem;">
                                 <span style="background: #e3f2fd; color: #1976d2; padding: 0.25rem 0.6rem; border-radius: 4px; font-size: 0.85rem; font-weight: 600;">
-                                    {{ a.get_type_display }}
+                                    {{ a.display_name }}
                                 </span>
                             </td>
                             <td style="padding: 1rem; text-align: center; font-weight: 600;">{{ a.weight_in_course }}%</td>

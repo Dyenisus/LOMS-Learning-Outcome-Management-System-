@@ -46,6 +46,48 @@ class Assessment(models.Model):
         verbose_name = "Assessment"
         verbose_name_plural = "Assessments"
 
+    @property
+    def type_sequence(self) -> int:
+        """
+        Sequential number among assessments of the same type within the course.
+        """
+        if not getattr(self, "id", None) or not getattr(self, "course_id", None):
+            return 1
+
+        if not hasattr(self, "_type_sequence_cache"):
+            self._type_sequence_cache = (
+                self.__class__.objects.filter(
+                    course_id=self.course_id,
+                    type=self.type,
+                    id__lte=self.id,
+                ).count()
+            )
+        return self._type_sequence_cache
+
+    @property
+    def type_total(self) -> int:
+        if not getattr(self, "course_id", None):
+            return 1
+        if not hasattr(self, "_type_total_cache"):
+            self._type_total_cache = (
+                self.__class__
+                .objects
+                .filter(course_id=self.course_id, type=self.type)
+                .count()
+            ) or 1
+        return self._type_total_cache
+
+    @property
+    def display_name(self) -> str:
+        """
+        Human-friendly label like 'Midterm 2'.
+        """
+        base = self.get_type_display()
+        if self.type_total > 1:
+            seq = self.type_sequence
+            return f"{base} {seq}"
+        return base
+
 
 class AssessmentLearningOutcome(models.Model):
     """

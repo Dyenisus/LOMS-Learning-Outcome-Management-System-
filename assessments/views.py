@@ -253,40 +253,31 @@ def assessment_grade_manage(request, pk):
             field_name = f"student_{student.id}"
             raw_value = request.POST.get(field_name, "").strip()
 
-            # Boş bırakıldıysa → kaydı sil veya dokunma
             if raw_value == "":
-                # İstersen burada var olan kaydı silebilirsin:
-                # existing = results_by_student.get(student.id)
-                # if existing:
-                #     existing.delete()
                 continue
 
             try:
                 score_val = Decimal(raw_value)
             except (InvalidOperation, ValueError):
-                # Geçersiz giriş → ignore
                 continue
 
-            # update_or_create: aynı öğrenci+assessment için tek kayıt
             StudentAssessmentResult.objects.update_or_create(
                 student=student,
                 assessment=assessment,
                 defaults={
-                    "raw_score": score_val,      # 🟩 asıl not
+                    "raw_score": score_val,
                 },
             )
 
         messages.success(request, "Grades saved for this assessment.")
-        return redirect("assessments:assessment_grade_manage", pk=assessment.id)
+        return redirect("assessments:assessment_manage", course_id=course.id)
 
-    # GET: tablo için satırları hazırla
     rows = []
     for student in students:
         result = results_by_student.get(student.id)
 
         score_value = None
         if result is not None:
-            # Hem eski hem yeni world ile uyumlu kalmak için:
             score_value = getattr(result, "score", None)
             if score_value is None:
                 score_value = getattr(result, "raw_score", None)

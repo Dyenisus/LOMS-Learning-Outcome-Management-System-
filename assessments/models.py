@@ -26,11 +26,11 @@ class Assessment(models.Model):
     )
 
     weight_in_course = models.PositiveSmallIntegerField(
-        help_text="Contribution to course grade in percent (0-100).",
+        help_text="Contribution to overall course grade (0-100%).",
     )
     max_score = models.PositiveIntegerField(
         default=100,
-        help_text="Maximum raw score (e.g. 100).",
+        help_text="Maximum achievable raw score.",
     )
     date = models.DateField(
         null=True,
@@ -106,7 +106,7 @@ class AssessmentLearningOutcome(models.Model):
     )
     # Bu assessment içindeki ağırlık (0-100)
     weight_in_assessment = models.PositiveSmallIntegerField(
-        help_text="Percentage of this assessment that targets this LO (0-100).",
+        help_text="Percentage of this assessment attributed to the LO (0-100%).",
     )
 
     class Meta:
@@ -138,7 +138,7 @@ class StudentAssessmentResult(models.Model):
         decimal_places=2,
         null=True,
         blank=True,
-        help_text="Öğrencinin bu assessment'tan aldığı puan (örn. 85.5).",
+        help_text="Student's raw score on this assessment.",
     )
 
     created_at = models.DateTimeField(auto_now_add=True)

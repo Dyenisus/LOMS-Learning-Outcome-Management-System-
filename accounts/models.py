@@ -46,7 +46,7 @@ class CustomUser(AbstractUser):
     student_grade = models.PositiveSmallIntegerField(
         null=True,
         blank=True,
-        help_text="Student grade / year (1, 2, 3, 4 ...)",
+        help_text="Student grade / academic year (1-4).",
     )
     
     student_faculty = models.ForeignKey(
@@ -55,7 +55,7 @@ class CustomUser(AbstractUser):
         blank=True,
         on_delete=models.SET_NULL,
         related_name="students",
-        help_text="Student için kayıtlı olduğu Faculty",
+        help_text="Faculty the student is enrolled in.",
     )
 
     student_program = models.ForeignKey(
@@ -64,7 +64,7 @@ class CustomUser(AbstractUser):
         blank=True,
         on_delete=models.SET_NULL,
         related_name="students",
-        help_text="Student için kayıtlı olduğu program",
+        help_text="Program the student belongs to.",
     )
 
     faculty_member_faculty = models.ForeignKey(
@@ -73,21 +73,21 @@ class CustomUser(AbstractUser):
         blank=True,
         on_delete=models.SET_NULL,
         related_name="faculty_members",
-        help_text="Faculty Member için sorumlu olduğu Faculty",
+        help_text="Faculty this faculty member is responsible for.",
     )
 
     lecturer_programs = models.ManyToManyField(
         "organizations.Program",
         blank=True,
         related_name="lecturers",
-        help_text="Lecturer için sorumlu olduğu Program(lar)",
+        help_text="Programs assigned to this lecturer.",
     )
 
     lecturer_courses = models.ManyToManyField(
         "courses.Course",
         blank=True,
         related_name="lecturers",
-        help_text="Lecturer için sorumlu olduğu Course(lar)",
+        help_text="Courses assigned to this lecturer.",
     )
 
     phone = models.CharField(
@@ -100,7 +100,7 @@ class CustomUser(AbstractUser):
         max_length=32,
         null=True,
         blank=True,
-        help_text="Öğrenci numarası",
+        help_text="Official student identification number.",
     )
 
     must_change_password = models.BooleanField(

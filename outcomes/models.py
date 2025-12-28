@@ -16,22 +16,22 @@ class ProgramOutcome(models.Model):
 
     code = models.CharField(
         max_length=20,
-        help_text="PO kodu (örn: PO1, PLO2...)",
+        help_text="Program outcome code (e.g., PO1).",
     )
 
     short_title = models.CharField(
         max_length=255,
-        help_text="Kısa başlık (örn: Problem çözme)",
+        help_text="Short title (e.g., Problem solving).",
     )
 
     description = models.TextField(
         blank=True,
-        help_text="Detaylı açıklama",
+        help_text="Detailed description.",
     )
 
     order = models.PositiveSmallIntegerField(
         default=1,
-        help_text="Listelerde sıralama için",
+        help_text="Display order within lists.",
     )
 
     active = models.BooleanField(default=True)
@@ -58,22 +58,22 @@ class LearningOutcome(models.Model):
 
     code = models.CharField(
         max_length=20,
-        help_text="LO kodu (örn: LO1)",
+        help_text="Learning outcome code (e.g., LO1).",
     )
 
     short_title = models.CharField(
         max_length=255,
-        help_text="Kısa başlık (örn: Temel kavramları açıklama)",
+        help_text="Short title (e.g., Explain fundamental concepts).",
     )
 
     description = models.TextField(
         blank=True,
-        help_text="Detaylı açıklama",
+        help_text="Detailed description.",
     )
 
     order = models.PositiveSmallIntegerField(
         default=1,
-        help_text="Ders içi LO sıralaması",
+        help_text="Display order within the course.",
     )
 
     active = models.BooleanField(default=True)

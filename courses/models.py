@@ -28,7 +28,7 @@ class Course(models.Model):
         choices=Year.choices,
         null=True,
         blank=True,
-        help_text="Dersin tipik alındığı sınıf (1,2,3,4).",
+        help_text="Typical year students take this course (1-4).",
     )
 
     semester = models.CharField(
@@ -42,7 +42,7 @@ class Course(models.Model):
         decimal_places=1,
         null=True,
         blank=True,
-        help_text="ECTS / AKTS",
+        help_text="ECTS credit value.",
     )
 
     credit = models.DecimalField(
@@ -50,12 +50,12 @@ class Course(models.Model):
         decimal_places=1,
         null=True,
         blank=True,
-        help_text="Yerel kredi",
+        help_text="Local credit value.",
     )
 
     description = models.TextField(
         blank=True,
-        help_text="Ders açıklaması",
+        help_text="Free-form course description.",
     )
 
     lecturer = models.ForeignKey(
@@ -64,14 +64,14 @@ class Course(models.Model):
         blank=True,
         on_delete=models.SET_NULL,
         related_name="lecturer_courses_assigned",
-        help_text="Dersin genel sorumlu öğretim üyesi (program bazında).",
+        help_text="Primary lecturer responsible for this course.",
     )
 
     students = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         blank=True,
         related_name="enrolled_courses",
-        help_text="Bu derse kayıtlı öğrenciler (otomatik atanır).",
+        help_text="Students enrolled in this course (auto-managed).",
     )
 
     class Meta:

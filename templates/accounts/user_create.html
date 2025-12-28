@@ -129,6 +129,10 @@
                                 {{ user.faculty_member_faculty.code }}
                             {% elif user.student_faculty %}
                                 {{ user.student_faculty.code }}
+                            {% elif user.responsible_faculties.count %}
+                                {% with resp=user.responsible_faculties.all|first %}
+                                    {{ resp.code }}
+                                {% endwith %}
                             {% else %}
                                 -
                             {% endif %}

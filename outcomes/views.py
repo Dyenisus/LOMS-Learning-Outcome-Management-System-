@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.exceptions import PermissionDenied
+from django.db.models import Max
 
 from accounts.decorators import role_required
 from accounts.models import CustomUser
@@ -40,14 +41,19 @@ def program_outcome_create(request, program_id):
     _check_program_permission(request.user, program)
 
     if request.method == "POST":
-        form = ProgramOutcomeForm(request.POST)
+        form = ProgramOutcomeForm(request.POST, program=program)
         if form.is_valid():
             po = form.save(commit=False)
             po.program = program
+            max_order = (
+                ProgramOutcome.objects.filter(program=program).aggregate(Max("order")).get("order__max")
+                or 0
+            )
+            po.order = max_order + 1
             po.save()
             return redirect("outcomes:program_outcome_manage", program_id=program.id)
     else:
-        form = ProgramOutcomeForm()
+        form = ProgramOutcomeForm(program=program)
 
     context = {
         "program": program,
@@ -63,12 +69,12 @@ def program_outcome_edit(request, pk):
     _check_program_permission(request.user, program)
 
     if request.method == "POST":
-        form = ProgramOutcomeForm(request.POST, instance=po)
+        form = ProgramOutcomeForm(request.POST, instance=po, program=program)
         if form.is_valid():
             form.save()
             return redirect("outcomes:program_outcome_manage", program_id=program.id)
     else:
-        form = ProgramOutcomeForm(instance=po)
+        form = ProgramOutcomeForm(instance=po, program=program)
 
     context = {
         "program": program,
@@ -126,14 +132,14 @@ def learning_outcome_create(request, course_id):
     _check_course_permission_for_lecturer(request.user, course)
 
     if request.method == "POST":
-        form = LearningOutcomeForm(request.POST)
+        form = LearningOutcomeForm(request.POST, course=course)
         if form.is_valid():
             lo = form.save(commit=False)
             lo.course = course
             lo.save()
             return redirect("outcomes:learning_outcome_manage", course_id=course.id)
     else:
-        form = LearningOutcomeForm()
+        form = LearningOutcomeForm(course=course)
 
     context = {
         "course": course,
@@ -182,12 +188,12 @@ def learning_outcome_edit(request, pk):
     _check_course_permission_for_lecturer(request.user, course)
 
     if request.method == "POST":
-        form = LearningOutcomeForm(request.POST, instance=lo)
+        form = LearningOutcomeForm(request.POST, instance=lo, course=course)
         if form.is_valid():
             form.save()
             return redirect("outcomes:learning_outcome_manage", course_id=course.id)
     else:
-        form = LearningOutcomeForm(instance=lo)
+        form = LearningOutcomeForm(instance=lo, course=course)
 
     context = {
         "course": course,

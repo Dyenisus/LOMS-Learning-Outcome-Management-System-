@@ -58,6 +58,7 @@ def user_create(request):
             "student_program",
             "faculty_member_faculty",
         )
+        .prefetch_related("responsible_faculties")
     )
 
     context = {
